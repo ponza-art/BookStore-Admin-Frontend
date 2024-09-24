@@ -5,8 +5,11 @@ import AdminPanel from "./components/AdminPanel";
 import Login from "./components/Login"; // Login page
 import ManageBooks from './components/ManageBooks';
 import ManageUsers from './components/ManageUsers';
+import ManageAuthors from './components/ManageAuthores';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute'; // Protected route HOC
+import ManageCategories from "./components/ManageCategories";
+import ManageOrders from "./components/ManageOrders";
 
 function App() {
   const [user, setUser] = useState(null); // Store user info
@@ -46,7 +49,31 @@ function App() {
               <ManageUsers />
             </ProtectedRoute>
           }
-        />
+        /> 
+        <Route
+        path="/admin/authors"
+        element={
+          <ProtectedRoute>
+            <ManageAuthors />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/categories"
+        element={
+          <ProtectedRoute>
+            <ManageCategories />
+          </ProtectedRoute>
+        }
+      />
+          <Route
+        path="/admin/orders"
+        element={
+          <ProtectedRoute>
+            <ManageOrders />
+          </ProtectedRoute>
+        }
+      />
 
         {/* Other routes here */}
       </Routes>
