@@ -1,32 +1,91 @@
-import React from "react";
-import { FaHome, FaBook, FaUsers, FaFirstOrder, FaUserCircle, FaHollyBerry  } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { FaHome, FaBook, FaUsers, FaUserCircle, FaFirstOrder, FaBars } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
+  const [theme, setTheme] = useState('light'); // Default theme
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
+
+  // Effect to set the theme based on user preference
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme); // Save theme preference to local storage
+  }, [theme]);
+
+  // Toggle theme function
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
   return (
-    <nav className="navbar bg-cyan-900 text-white px-4 py-3 flex flex-wrap justify-between items-center">
-      <div className="flex items-center">
+    <div className="navbar bg-base-200 shadow-lg p-4">
+      {/* Sidebar toggle (Hamburger Icon) */}
+      <div className="flex-none lg:hidden">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="btn btn-square">
+          <FaBars className="text-xl" />
+        </button>
+      </div>
+
+      {/* Logo and Home link */}
+      <div className="flex items-center flex-1">
         <FaHome className="mr-2 text-xl" />
         <Link to="/" className="text-xl font-bold">Home</Link>
       </div>
-      <div className="flex gap-5 flex-wrap justify-center md:gap-10">
+
+      {/* Navbar Links (visible on large screens only) */}
+      <div className="hidden lg:flex flex-grow justify-center gap-6">
         <Link to="/admin/books" className="flex items-center">
-          <FaBook className="mr-1" /> <span className="hidden sm:inline">Manage Books</span>
+          <FaBook className="mr-1" /> <span>Manage Books</span>
         </Link>
         <Link to="/admin/users" className="flex items-center">
-          <FaUsers className="mr-1" /> <span className="hidden sm:inline">Manage Users</span>
+          <FaUsers className="mr-1" /> <span>Manage Users</span>
         </Link>
         <Link to="/admin/authors" className="flex items-center">
-          <FaUserCircle className="mr-1" /> <span className="hidden sm:inline">Manage Authors</span>
-        </Link>
-        <Link to="/admin/categories" className="flex items-center">
-          <FaHollyBerry  className="mr-1" /> <span className="hidden sm:inline">Manage Categories</span>
+          <FaUserCircle className="mr-1" /> <span>Manage Authors</span>
         </Link>
         <Link to="/admin/orders" className="flex items-center">
-          <FaFirstOrder className="mr-1" /> <span className="hidden sm:inline">Manage Orders</span>
+          <FaFirstOrder className="mr-1" /> <span>Manage Orders</span>
         </Link>
       </div>
-    </nav>
+
+      {/* Profile and Theme Toggle */}
+      <div className="flex items-center gap-4">
+        <div className="dropdown dropdown-end">
+          <label tabIndex="0" className="btn btn-square btn-ghost">
+            <FaUserCircle className="text-2xl" />
+          </label>
+          <ul tabIndex="0" className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
+            <li><Link to="/profile">Profile</Link></li>
+            <li><button>Logout</button></li>
+          </ul>
+        </div>
+
+        {/* Light/Dark mode toggle */}
+        <button onClick={toggleTheme} className="btn btn-square btn-ghost">
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
+      </div>
+
+      {/* Mobile Menu (visible when menu is open) */}
+      {isMenuOpen && (
+        <div className="absolute top-16 left-0 w-full bg-base-100 shadow-lg lg:hidden">
+          <div className="flex flex-col p-4 gap-4">
+            <Link to="/admin/books" className="flex items-center">
+              <FaBook className="mr-1" /> <span>Manage Books</span>
+            </Link>
+            <Link to="/admin/users" className="flex items-center">
+              <FaUsers className="mr-1" /> <span>Manage Users</span>
+            </Link>
+            <Link to="/admin/authors" className="flex items-center">
+              <FaUserCircle className="mr-1" /> <span>Manage Authors</span>
+            </Link>
+            <Link to="/admin/orders" className="flex items-center">
+              <FaFirstOrder className="mr-1" /> <span>Manage Orders</span>
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

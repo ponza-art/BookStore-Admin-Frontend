@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPanel from "./components/AdminPanel";
 import Login from "./components/Login"; // Login page
@@ -13,10 +13,23 @@ import ManageOrders from "./components/ManageOrders";
 
 function App() {
   const [user, setUser] = useState(null); // Store user info
+  const [theme, setTheme] = useState('light'); // Default theme
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const handleLoginSuccess = (userData) => {
     setUser(userData); // Store user info after login
   };
+
 
   return (
     <Router>

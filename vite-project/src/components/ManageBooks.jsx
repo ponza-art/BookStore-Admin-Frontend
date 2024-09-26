@@ -74,91 +74,93 @@ const ManageBooks = () => {
       <Toaster />
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Manage Books</h2>
 
-      <table className="table-auto w-full text-center shadow-md rounded-lg mb-8 bg-white">
-        <thead>
-          <tr className="bg-gray-200 text-sm">
-            <th className="px-4 py-2 border">ID</th>
-            <th className="px-4 py-2 border">Title</th>
-            <th className="px-4 py-2 border">Description</th>
-            <th className="px-4 py-2 border">Price</th>
-            <th className="px-4 py-2 border">Category</th>
-            <th className="px-4 py-2 border">Author</th>
-            <th className="px-4 py-2 border">Cover Image</th>
-            <th className="px-4 py-2 border">Sample PDF</th>
-            <th className="px-4 py-2 border">Source Path</th>
-            <th className="px-4 py-2 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {books.length > 0 ? (
-            books.map((book, index) => (
-              <tr key={book._id} className="border-t hover:bg-gray-100">
-                <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 border text-sm truncate">{book.title}</td>
-                <td className="px-4 py-2 border text-sm truncate max-w-xs">{book.description}</td>
-                <td className="px-4 py-2 border">${book.price}</td>
-                <td className="px-4 py-2 border">{book.category}</td>
-                <td className="px-4 py-2 border">{book.author}</td>
-                <td className="px-4 py-2 border">
-                  <img
-                    src={book.coverImage}
-                    alt="cover"
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                </td>
-                <td className="px-4 py-2 border">
-                  <a
-                    href={book.samplePdf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cyan-900 hover:underline"
-                  >
-                    View Sample
-                  </a>
-                </td>
-                <td className="px-4 py-2 border">
-                  <a
-                    href={book.sourcePath}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cyan-900 hover:underline"
-                  >
-                    View File
-                  </a>
-                </td>
-                <td className="px-4 py-2 border">
-                  <div className="flex justify-center space-x-2">
-                    <button
-                      className="bg-cyan-900 hover:bg-cyan-800 text-white p-2 rounded-full flex items-center justify-center"
-                      onClick={() => handleEdit(book)}
-                      title="Edit Book"
+      <div className="overflow-x-auto w-full">
+        <table className="table-auto w-full text-center shadow-md rounded-lg mb-8 bg-white">
+          <thead>
+            <tr className="bg-gray-200 text-sm">
+              <th className="px-4 py-2 border">ID</th>
+              <th className="px-4 py-2 border">Title</th>
+              <th className="px-4 py-2 border">Description</th>
+              <th className="px-4 py-2 border">Price</th>
+              <th className="px-4 py-2 border">Category</th>
+              <th className="px-4 py-2 border">Author</th>
+              <th className="px-4 py-2 border">Cover Image</th>
+              <th className="px-4 py-2 border">Sample PDF</th>
+              <th className="px-4 py-2 border">Source Path</th>
+              <th className="px-4 py-2 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {books.length > 0 ? (
+              books.map((book, index) => (
+                <tr key={book._id} className="border-t hover:bg-gray-100">
+                  <td className="px-4 py-2 border">{index + 1}</td>
+                  <td className="px-4 py-2 border text-sm truncate">{book.title}</td>
+                  <td className="px-4 py-2 border text-sm truncate max-w-xs">{book.description}</td>
+                  <td className="px-4 py-2 border">${book.price}</td>
+                  <td className="px-4 py-2 border">{book.category}</td>
+                  <td className="px-4 py-2 border">{book.author}</td>
+                  <td className="px-4 py-2 border">
+                    <img
+                      src={book.coverImage}
+                      alt="cover"
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  </td>
+                  <td className="px-4 py-2 border">
+                    <a
+                      href={book.samplePdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan-900 hover:underline"
                     >
-                      <FaEdit size={14} />
-                    </button>
-                    <button
-                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full flex items-center justify-center"
-                      onClick={() => handleDeleteClick(book)}
-                      title="Delete Book"
+                      View Sample
+                    </a>
+                  </td>
+                  <td className="px-4 py-2 border">
+                    <a
+                      href={book.sourcePath}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan-900 hover:underline"
                     >
-                      <FaTrash size={14} />
-                    </button>
-                  </div>
+                      View File
+                    </a>
+                  </td>
+                  <td className="px-4 py-2 border">
+                    <div className="flex justify-center space-x-2">
+                      <button
+                        className="bg-cyan-900 hover:bg-cyan-800 text-white p-2 rounded-full flex items-center justify-center"
+                        onClick={() => handleEdit(book)}
+                        title="Edit Book"
+                      >
+                        <FaEdit size={14} />
+                      </button>
+                      <button
+                        className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full flex items-center justify-center"
+                        onClick={() => handleDeleteClick(book)}
+                        title="Delete Book"
+                      >
+                        <FaTrash size={14} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="10" className="text-center py-4">
+                  No books found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="10" className="text-center py-4">
-                No books found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {editingBook && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-box bg-white p-8 rounded shadow-lg">
+          <div className="modal-box bg-white p-8 rounded shadow-lg max-w-lg w-full mx-4">
             <EditBookForm
               book={editingBook}
               onUpdateSuccess={handleUpdateSuccess}
@@ -170,7 +172,7 @@ const ManageBooks = () => {
 
       {showAddBookModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-box bg-white p-8 rounded shadow-lg">
+          <div className="modal-box bg-white p-8 rounded shadow-lg max-w-lg w-full mx-4">
             <AddBookForm
               onAdd={handleAddBookSuccess}
               onClose={handleCloseAddModal}
@@ -181,7 +183,7 @@ const ManageBooks = () => {
 
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-box bg-white p-8 rounded shadow-lg">
+          <div className="modal-box bg-white p-8 rounded shadow-lg max-w-lg w-full mx-4">
             <h3 className="text-2xl font-bold mb-4 text-red-600">
               Delete Confirmation
             </h3>
