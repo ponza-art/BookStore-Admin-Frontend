@@ -1,8 +1,10 @@
 // src/services/api.js
-export const getBooks = async () => {
-    const response = await fetch("https://book-store-backend-sigma-one.vercel.app/book/");
+export const getBooks = async (queryParams = {}) => {
+    const query = new URLSearchParams(queryParams).toString();
+    const response = await fetch(`https://book-store-backend-sigma-one.vercel.app/book/?${query}`);
     return await response.json();
-};
+  };
+  
 
 // Add a book to the backend
 export const addBook = async (book, sourcePath, coverImage, samplePdf) => {

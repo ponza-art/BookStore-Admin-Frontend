@@ -16,10 +16,10 @@ const ManageBooks = () => {
     fetchBooks();
   }, []);
 
-  const fetchBooks = async () => {
+  const fetchBooks = async (filters = {}) => {
     try {
-      const data = await getBooks();
-      setBooks(data);
+      const data = await getBooks(filters); 
+      setBooks(data.books);
     } catch (error) {
       toast.error("Failed to fetch books");
       console.error("Failed to fetch books", error);
@@ -70,12 +70,12 @@ const ManageBooks = () => {
   };
 
   return (
-    <div className="container mx-auto my-8 p-4 lg:p-8 flex flex-col items-center shadow-lg bg-white rounded-lg">
+    <div className="container mx-auto my-8 p-4 lg:p-8 flex flex-col items-center shadow-lg rounded-lg">
       <Toaster />
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Manage Books</h2>
+      <h2 className="text-3xl font-bold mb-6 ">Manage Books</h2>
 
       <div className="overflow-x-auto w-full">
-        <table className="table-auto w-full text-center shadow-md rounded-lg mb-8 bg-white">
+        <table className="table-auto w-full text-center shadow-md rounded-lg mb-8 ">
           <thead>
             <tr className="bg-gray-200 text-sm">
               <th className="px-4 py-2 border">ID</th>

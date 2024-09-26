@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaHome, FaBook, FaUsers, FaUserCircle, FaFirstOrder, FaBars } from 'react-icons/fa';
+import { FaHome, FaBook, FaUsers, FaUserCircle, FaFirstOrder, FaBars, FaBoxes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -33,8 +33,8 @@ const Header = () => {
       </div>
 
       {/* Navbar Links (visible on large screens only) */}
-      <div className="hidden lg:flex flex-grow justify-center gap-6">
-        <Link to="/admin/books" className="flex items-center">
+      <div className="hidden lg:flex flex-grow  gap-6 ">
+        <Link to="/admin/books" className="flex items-center ">
           <FaBook className="mr-1" /> <span>Manage Books</span>
         </Link>
         <Link to="/admin/users" className="flex items-center">
@@ -43,9 +43,12 @@ const Header = () => {
         <Link to="/admin/authors" className="flex items-center">
           <FaUserCircle className="mr-1" /> <span>Manage Authors</span>
         </Link>
-        <Link to="/admin/orders" className="flex items-center">
-          <FaFirstOrder className="mr-1" /> <span>Manage Orders</span>
+        <Link to="/admin/categories" className="flex items-center">
+          <FaBoxes className="mr-1" /> <span>Manage Categories</span>
         </Link>
+        {/* <Link to="/admin/orders" className="flex items-center">
+          <FaFirstOrder className="mr-1" /> <span>Manage Orders</span>
+        </Link> */}
       </div>
 
       {/* Profile and Theme Toggle */}
@@ -55,7 +58,6 @@ const Header = () => {
             <FaUserCircle className="text-2xl" />
           </label>
           <ul tabIndex="0" className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
-            <li><Link to="/profile">Profile</Link></li>
             <li><button>Logout</button></li>
           </ul>
         </div>
@@ -79,9 +81,12 @@ const Header = () => {
             <Link to="/admin/authors" className="flex items-center">
               <FaUserCircle className="mr-1" /> <span>Manage Authors</span>
             </Link>
-            <Link to="/admin/orders" className="flex items-center">
-              <FaFirstOrder className="mr-1" /> <span>Manage Orders</span>
+            <Link to="/admin/categories" className="flex items-center">
+              <FaBoxes className="mr-1" /> <span>Manage Categories</span>
             </Link>
+            {/* <Link to="/admin/orders" className="flex items-center">
+              <FaFirstOrder className="mr-1" /> <span>Manage Orders</span>
+            </Link> */}
           </div>
         </div>
       )}

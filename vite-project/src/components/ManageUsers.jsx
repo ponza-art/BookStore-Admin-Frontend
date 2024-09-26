@@ -41,7 +41,7 @@ const ManageUsers = () => {
   return (
     <div className="container mx-auto my-8">
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
-      <table className="table-auto w-full bg-white shadow-md rounded mb-8">
+      <table className="table-auto w-full  shadow-md rounded mb-8">
         <thead>
           <tr className="bg-gray-100">
             <th className="px-4 py-2">ID</th>
