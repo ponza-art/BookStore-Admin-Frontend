@@ -16,10 +16,10 @@ const ManageBooks = () => {
     fetchBooks();
   }, []);
 
-  const fetchBooks = async (filters = {}) => {
+  const fetchBooks = async () => {
     try {
-      const data = await getBooks(filters); 
-      setBooks(data.books);
+      const data = await getBooks();
+      setBooks(data);
     } catch (error) {
       toast.error("Failed to fetch books");
       console.error("Failed to fetch books", error);
