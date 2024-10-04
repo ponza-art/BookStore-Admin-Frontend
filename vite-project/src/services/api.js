@@ -116,6 +116,25 @@ export const deleteUser = async (id) => {
     }
 };
 
+
+export const userStatus = async (id, newStatus) => {
+    const response = await fetch(`https://book-store-backend-sigma-one.vercel.app/users/edit-status/${id}`, {
+        method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ status: newStatus }) 
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to update user status');
+    }
+  };
+  
+
+
+
+
 // Categories API
 export const getCategories = async () => {
     const response = await fetch('https://book-store-backend-sigma-one.vercel.app/category');

@@ -1,6 +1,8 @@
 // src/components/ManageUsers.jsx
 import React, { useState, useEffect } from 'react';
-import { getUsers, deleteUser } from '../services/api';
+import { getUsers, deleteUser,userStatus  } from '../services/api';
+
+import { toast } from'react-toastify';
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -21,6 +23,26 @@ const ManageUsers = () => {
         setError("Failed to load users.");
       });
   }, []);
+
+
+  const handleStatus = (id, newStatus) => {
+    userStatus(id, newStatus)
+      .then(() => {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === id ? { ...user, status: newStatus } : user
+          )
+        );
+        toast.success(`User status updated to ${newStatus ? 'active' : 'blocked'}`);
+      })
+      .catch((err) => {
+        toast.error('Failed to update user status');
+      });
+  };
+  
+
+
+
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
@@ -47,7 +69,8 @@ const ManageUsers = () => {
             <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Username</th>
             <th className="px-4 py-2">Email</th>
-            {/* <th className="px-4 py-2">Actions</th> */}
+            <th className="px-4 py-2">Status</th>
+       
           </tr>
         </thead>
         <tbody>
@@ -57,6 +80,16 @@ const ManageUsers = () => {
                 <td className="px-4 py-2">{user._id}</td>
                 <td className="px-4 py-2">{user.username}</td>
                 <td className="px-4 py-2">{user.email}</td>
+                <td className="px-4 py-2">
+                  <button
+                    className={`btn ${user.status ? 'btn-error' : 'btn-primary'} mr-2`}
+                    onClick={() => handleStatus(user._id, !user.status)}
+                  >
+                    {user.status ? 'Block' : 'active'}
+                  </button>
+                </td>
+
+
                 {/* <td className="px-4 py-2">
                   <button className="btn btn-primary mr-2">Edit</button>
                   <button className="btn btn-error" onClick={() => handleDelete(user._id)}>Delete</button>
