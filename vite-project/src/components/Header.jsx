@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { FaHome, FaBook, FaUsers, FaUserCircle, FaFirstOrder, FaBars, FaBoxes } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const [theme, setTheme] = useState('light'); // Default theme
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
+  const [theme, setTheme] = useState('light'); 
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const navigate = useNavigate(); 
 
-  // Effect to set the theme based on user preference
+  
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme); // Save theme preference to local storage
+    localStorage.setItem('theme', theme); 
   }, [theme]);
 
-  // Toggle theme function
+  
   const toggleTheme = () => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  
+  const handleLogout = () => {
+    
+    localStorage.removeItem('token');
+    
+    
+    navigate('/');
   };
 
   return (
@@ -33,8 +43,8 @@ const Header = () => {
       </div>
 
       {/* Navbar Links (visible on large screens only) */}
-      <div className="hidden lg:flex flex-grow  gap-6 ">
-        <Link to="/admin/books" className="flex items-center ">
+      <div className="hidden lg:flex flex-grow gap-6">
+        <Link to="/admin/books" className="flex items-center">
           <FaBook className="mr-1" /> <span>Manage Books</span>
         </Link>
         <Link to="/admin/users" className="flex items-center">
@@ -58,7 +68,9 @@ const Header = () => {
             <FaUserCircle className="text-2xl" />
           </label>
           <ul tabIndex="0" className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
-            <li><button>Logout</button></li>
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
           </ul>
         </div>
 
