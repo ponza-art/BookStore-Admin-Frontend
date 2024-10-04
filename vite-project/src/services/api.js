@@ -118,18 +118,20 @@ export const deleteUser = async (id) => {
 
 
 export const userStatus = async (id, newStatus) => {
-    const response = await fetch(`https://book-store-backend-sigma-one.vercel.app/users/edit-status/${id}`, {
-        method: 'PATCH',
+    const response = await fetch('https://book-store-backend-sigma-one.vercel.app/users/edit-status', { 
+      method: 'PATCH',
       headers: {
+        'Content-Type': 'application/json',  
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      body: JSON.stringify({ status: newStatus }) 
+      body: JSON.stringify({ userId: id, status: newStatus })  
     });
   
     if (!response.ok) {
       throw new Error('Failed to update user status');
     }
   };
+  
   
 
 

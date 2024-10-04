@@ -94,13 +94,7 @@ const AdminPanel = () => {
                     <h2 className="text-xl font-semibold">Manage Categories</h2>
                     <p className="text-sm ">(View and manage Categories)</p>
                 </Link>
-                <Link
-                    to="/admin/orders"
-                    className="p-6 bg-cyan-900 text-white rounded shadow-lg hover:transform hover:scale-105 transition-transform"
-                >
-                    <h2 className="text-xl font-semibold">Manage Orders</h2>
-                    <p className="text-sm ">(View orders)</p>
-                </Link>
+                
             </div>
         </div>
     );

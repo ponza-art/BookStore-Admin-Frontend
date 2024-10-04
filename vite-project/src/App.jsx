@@ -9,7 +9,6 @@ import ManageAuthors from './components/ManageAuthores';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute'; // Protected route HOC
 import ManageCategories from "./components/ManageCategories";
-import ManageOrders from "./components/ManageOrders";
 
 function App() {
   const [user, setUser] = useState(null); // Store user info
@@ -79,14 +78,7 @@ function App() {
           </ProtectedRoute>
         }
       />
-          <Route
-        path="/admin/orders"
-        element={
-          <ProtectedRoute>
-            <ManageOrders />
-          </ProtectedRoute>
-        }
-      />
+         
 
         {/* Other routes here */}
       </Routes>
