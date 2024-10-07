@@ -30,7 +30,7 @@ const Header = ({ toggleSidebar, sidebarOpen, theme }) => {
       >
         <div className="flex lg:flex-col items-center justify-between w-full p-4 lg:p-0">
           <Link to="/admin" className="mx-4 lg:mx-10">
-            <img src={"./logo-removebg.png"} alt="logo" className="w-24 lg:w-60 h-16 lg:h-24" />
+            <img src={"/logo-removebg.png"} alt="logo" className="w-24 lg:w-60 h-16 lg:h-24" />
           </Link>
         </div>
 
@@ -63,12 +63,15 @@ const Header = ({ toggleSidebar, sidebarOpen, theme }) => {
           <button onClick={toggleTheme} className="btn btn-circle btn-ghost">
             {localTheme === "light" ? "🌙" : "☀️"}
           </button>
+          <button onClick={toggleTheme} className="btn btn-circle btn-ghost">
+            < IoIosNotificationsOutline  className="text-3xl" />
+          </button>
 
           <div className="dropdown dropdown-bottom">
             <label tabIndex="0" className="btn btn-square btn-ghost">
               <FaUserCircle className="text-3xl" />
             </label>
-         
+
             <ul
               tabIndex="0"
               className="dropdown-content p-2 shadow bg-base-100 rounded-box w-52"
