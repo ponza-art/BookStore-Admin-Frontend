@@ -72,21 +72,27 @@ const ManageBooks = () => {
   return (
     <div className="container mx-auto my-8 p-4 lg:p-8 flex flex-col items-center shadow-lg rounded-lg">
       <Toaster />
-      <h2 className="text-3xl font-bold mb-6 ">Manage Books</h2>
-
+      <h2 className="text-3xl text-amber-900  font-bold mb-12 ">Manage Books</h2>
+      <button
+        onClick={handleAddBook}
+        className="fixed  bg-transparent text-xl  hover:underline font-semibold  right-14 border-[#853e3e] text-[#936767] mb-5  px-3 py-10 "
+        
+      >
+     Add Book
+      </button>
       <div className="overflow-x-auto w-full">
-        <table className="table-auto w-full text-center shadow-md rounded-lg mb-8 ">
+        <table className="table-auto border w-full text-center shadow-md rounded-lg mb-8 ">
           <thead>
-            <tr className="bg-gray-200 text-sm">
+            <tr className="bg-[#e2d6d6] tab-border-2  text-sm">
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Title</th>
               <th className="px-4 py-2 border">Description</th>
               <th className="px-4 py-2 border">Price</th>
               <th className="px-4 py-2 border">Category</th>
               <th className="px-4 py-2 border">Author</th>
-              <th className="px-4 py-2 border">Cover Image</th>
-              <th className="px-4 py-2 border">Sample PDF</th>
-              <th className="px-4 py-2 border">Source Path</th>
+              <th className="px-4 py-2 border">Cover</th>
+              <th className="px-4 py-2 border"> PDF</th>
+              <th className="px-4 py-2 border">Link</th>
               <th className="px-4 py-2 border">Actions</th>
             </tr>
           </thead>
@@ -104,7 +110,7 @@ const ManageBooks = () => {
                     <img
                       src={book.coverImage}
                       alt="cover"
-                      className="w-12 h-12 object-cover rounded"
+                      className="w-14 h-12 object-cover rounded"
                     />
                   </td>
                   <td className="px-4 py-2 border">
@@ -112,9 +118,9 @@ const ManageBooks = () => {
                       href={book.samplePdf}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-900 hover:underline"
+                      className="text-amber-800 hover:underline"
                     >
-                      View Sample
+                       Sample
                     </a>
                   </td>
                   <td className="px-4 py-2 border">
@@ -122,22 +128,22 @@ const ManageBooks = () => {
                       href={book.sourcePath}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-900 hover:underline"
+                      className="text-amber-800 hover:underline"
                     >
-                      View File
+                      Book
                     </a>
                   </td>
                   <td className="px-4 py-2 border">
-                    <div className="flex justify-center space-x-2">
+                    <div className="flex justify-center ">
                       <button
-                        className="bg-cyan-900 hover:bg-cyan-800 text-white p-2 rounded-full flex items-center justify-center"
+                        className=" text-[#612121] p-2  flex items-center justify-center"
                         onClick={() => handleEdit(book)}
                         title="Edit Book"
                       >
-                        <FaEdit size={14} />
+                        <FaEdit size={16} />
                       </button>
                       <button
-                        className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full flex items-center justify-center"
+                        className=" text-[#a42323] p-2  flex items-center justify-center"
                         onClick={() => handleDeleteClick(book)}
                         title="Delete Book"
                       >
@@ -159,8 +165,8 @@ const ManageBooks = () => {
       </div>
 
       {editingBook && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-box bg-white p-8 rounded shadow-lg max-w-lg w-full mx-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90">
+          <div className="modal-box bg-amber-900 p-3 rounded  max-w-2xl w-full mx-4">
             <EditBookForm
               book={editingBook}
               onUpdateSuccess={handleUpdateSuccess}
@@ -171,8 +177,8 @@ const ManageBooks = () => {
       )}
 
       {showAddBookModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-box bg-white p-8 rounded shadow-lg max-w-lg w-full mx-4">
+        <div className="fixed  inset-0 flex items-center   justify-center bg-black bg-opacity-90">
+          <div className="modal-box bg-amber-900 p-3 rounded  max-w-2xl w-full mx-4">
             <AddBookForm
               onAdd={handleAddBookSuccess}
               onClose={handleCloseAddModal}
@@ -182,22 +188,23 @@ const ManageBooks = () => {
       )}
 
       {showDeleteModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="modal-box bg-white p-8 rounded shadow-lg max-w-lg w-full mx-4">
-            <h3 className="text-2xl font-bold mb-4 text-red-600">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-85">
+          <div className="modal-box bg-orange-50 p-8 rounded shadow-lg max-w-lg w-full mx-4">
+            <h3 className="text-2xl font-bold mb-4 text-[#563c3c] ">
               Delete Confirmation
             </h3>
             <p>Are you sure you want to delete this book?</p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleDeleteConfirm}
-                className="btn btn-danger bg-red-600 hover:bg-red-700 text-white mr-2"
+                className="btn btn-danger bg-[#853e3e] hover:bg-red-700 text-white mr-2"
               >
                 Delete
               </button>
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="btn btn-secondary"
+                className="btn  border-amber-900 bg-transparent  hover:bg-[#853e3e]  text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
+
               >
                 Cancel
               </button>
@@ -206,13 +213,7 @@ const ManageBooks = () => {
         </div>
       )}
 
-      <button
-        onClick={handleAddBook}
-        className="fixed bottom-4 right-4 bg-cyan-900 hover:bg-cyan-800 text-white rounded-md px-4 py-2 flex items-center"
-        style={{ width: '200px', height: '50px' }}
-      >
-        <FaPlus className="mr-2" /> Add Book
-      </button>
+ 
     </div>
   );
 };

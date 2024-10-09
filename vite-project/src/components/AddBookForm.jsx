@@ -82,93 +82,129 @@ const AddBookForm = ({ onAdd, onClose }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded p-8">
-        <h2 className="text-2xl font-bold mb-4">Add a New Book</h2>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input input-bordered w-full mb-4"
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="textarea textarea-bordered w-full mb-4"
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="input input-bordered w-full mb-4"
-        />
+    <div className="flex justify-center items-center ">
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full ">
+        <h2 className="text-3xl font-bold mb-6 text-center  text-[#844f4f] ">Add a New Book</h2>
 
-        {/* Category Dropdown */}
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="select select-bordered w-full mb-4"
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat.title}>
-              {cat.title}
-            </option>
-          ))}
-        </select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Title Input */}
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input input-bordered border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          />
 
-        {/* Author Dropdown */}
-        <select
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          className="select select-bordered w-full mb-4"
-        >
-          <option value="">Select Author</option>
-          {authors.map((auth) => (
-            <option key={auth._id} value={auth.name}>
-              {auth.name}
-            </option>
-          ))}
-        </select>
+          {/* Price Input */}
+          <input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          />
 
-        <label htmlFor="sourcePath">The Full Book</label>
-        <input
-          type="file"
-          name="sourcePath"
-          accept=".pdf"
-          onChange={(e) => handleFileChange(e, setSourcePath)}
-          className="file-input w-full mb-4"
-        />
-        <label htmlFor="coverImage">Cover</label>
-        <input
-          type="file"
-          name="coverImage"
-          accept="image/*"
-          onChange={(e) => handleFileChange(e, setCoverImage)}
-          className="file-input w-full mb-4"
-        />
-        <label htmlFor="samplePdf">Sample</label>
-        <input
-          type="file"
-          name="samplePdf"
-          accept="application/pdf"
-          onChange={(e) => handleFileChange(e, setSamplePdf)}
-          className="file-input w-full mb-4"
-        />
-        <div className="flex gap-4">
+          
+          {/* Category Dropdown */}
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="select select-bordered input  text-[#5b2c2c] font-medium   border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat.title}>
+                {cat.title}
+              </option>
+            ))}
+          </select>
+
+          {/* Author Dropdown */}
+          <select
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            className="select  text-[#5b2c2c] font-medium select-bordered input  border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          >
+            <option  className='text-[#936767]'  value="">Select Author</option>
+            {authors.map((auth) => (
+              <option className='text-[#936767]'  key={auth._id} value={auth.name}>
+                {auth.name}
+              </option>
+            ))}
+          </select>
+
+   {/* Description Input */}
+   <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="textarea textarea-bordered w-full input  border-blue-950 w focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
+          />
 
 
-        <button type="submit" className="btn btn-primary w-1/2" disabled={uploading}>
-          {uploading ? 'Uploading...' : 'Add Book'}
-        </button>
+        </div>
 
-        {/* Close Button inside the form */}
-        <button type='button' onClick={onClose} className="btn btn-secondary w-1/2">
-          Close
-        </button>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          {/* Source Path Upload */}
+          <div className="mb-4">
+            <label htmlFor="sourcePath" className="block text-[#936767] -600 mb-2">The Full Book</label>
+            <input
+              type="file"
+              name="sourcePath"
+              accept=".pdf"
+              onChange={(e) => handleFileChange(e, setSourcePath)}
+              className="file-input w-full border-gray-300"
+            />
+          </div>
+  {/* Sample PDF Upload */}
+  <div className="mb-6">
+            <label htmlFor="samplePdf" className="block text-[#936767] mb-2">Sample</label>
+            <input
+              type="file"
+              name="samplePdf"
+              accept="application/pdf"
+              onChange={(e) => handleFileChange(e, setSamplePdf)}
+              className="file-input w-full border-gray-300"
+            />
+          </div>
+
+
+          {/* Cover Image Upload */}
+          <div className="mb-4">
+            <label htmlFor="coverImage" className="block text-[#936767] mb-2">Cover</label>
+            <input
+              type="file"
+              name="coverImage"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, setCoverImage)}
+              className="file-input w-full border-gray-300"
+            />
+          </div>
+
+        
+        </div>
+
+        {/* Buttons */}
+        <div className="flex justify-center gap-2  mt-6">
+              {/* Close Button */}
+              <button
+            type="button"
+            onClick={onClose}
+            className="btn  border-amber-900 bg-transparent  hover:bg-amber-700  text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
+          >
+            Close
+          </button>
+
+          <button
+            type="submit"
+            className={`btn bg-amber-900 hover:bg-amber-700  w-20  text-white font-bold py-2 px-2 rounded-lg  ${uploading && 'cursor-not-allowed'}`}
+            disabled={uploading}
+          >
+            {uploading ? 'Uploading...' : 'Add'}
+          </button>
+
+      
         </div>
       </form>
     </div>

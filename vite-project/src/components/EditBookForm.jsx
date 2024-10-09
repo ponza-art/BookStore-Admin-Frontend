@@ -77,39 +77,39 @@ const EditBookForm = ({ book, onUpdateSuccess, onCancel }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded p-8">
-      <h2 className="text-2xl font-bold mb-4">Edit Book</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="flex justify-center items-center">
+      <form  className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full "  onSubmit={handleSubmit}>
+      <h2 className="text-3xl font-bold mb-6 text-center  text-[#844f4f] ">Edit Book</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <input
           type="text"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="input input-bordered w-full mb-4"
+          className="input input-bordered border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+
         />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="textarea textarea-bordered w-full mb-4"
-        />
+       
         <input
           type="number"
           placeholder="Price"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          className="input input-bordered w-full mb-4"
+          className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+
         />
 
         {/* Category Dropdown */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="select select-bordered w-full mb-4"
+          className="select select-bordered input  text-[#5b2c2c] font-medium   border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+
         >
-          <option value="">Select Category</option>
+          <option className='text-[#936767]' value="">Select Category</option>
           {categories.map((cat) => (
-            <option key={cat._id} value={cat.title}>
+            <option className='text-[#936767]' key={cat._id} value={cat.title}>
               {cat.title}
             </option>
           ))}
@@ -119,47 +119,72 @@ const EditBookForm = ({ book, onUpdateSuccess, onCancel }) => {
         <select
           value={authorName}
           onChange={(e) => setAuthorName(e.target.value)}
-          className="select select-bordered w-full mb-4"
+          className="select select-bordered input  text-[#5b2c2c] font-medium   border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+
         >
-          <option value="">Select Author</option>
+          <option  className='text-[#936767]' value="">Select Author</option>
           {authors.map((auth) => (
-            <option key={auth._id} value={auth.name}>
+            <option  className='text-[#936767]' key={auth._id} value={auth.name}>
               {auth.name}
             </option>
           ))}
         </select>
 
-        <label htmlFor="sourcePath">The Full Book</label>
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="textarea textarea-bordered w-full input  border-blue-950 w focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
+
+        />
+
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+<div className="mb-4">
+        <label className="block text-[#936767] -600 mb-2"  htmlFor="sourcePath"   >The Full Book</label>
         <input
           type="file"
           name="sourcePath"
           accept=".pdf"
           onChange={(e) => handleFileChange(e, setSourcePath)}
-          className="file-input w-full mb-4"
+          className="file-input w-full mb-4  border-gray-300"
         />
-        <label htmlFor="coverImage">Cover</label>
+          </div>
+          <div className="mb-6">
+        <label   className="block text-[#936767] -600 mb-2"   htmlFor="coverImage">Cover</label>
         <input
           type="file"
           name="coverImage"
           accept="image/*"
           onChange={(e) => handleFileChange(e, setCoverImage)}
-          className="file-input w-full mb-4"
+          className="file-input w-full mb-4  border-gray-300 "
         />
-        <label htmlFor="samplePdf">Sample</label>
+        </div>
+        <div className="mb-4">
+        <label  className="block text-[#936767] -600 mb-2"  htmlFor="samplePdf">Sample</label>
         <input
           type="file"
           name="samplePdf"
           accept="application/pdf"
           onChange={(e) => handleFileChange(e, setSamplePdf)}
-          className="file-input w-full mb-4"
+          className="file-input w-full mb-4   border-gray-300"
         />
-        <div className="flex gap-4">
-          <button type="submit" className="btn btn-primary w-1/2" disabled={uploading}>
-            {uploading ? 'Uploading...' : 'Update Book'}
-          </button>
-          <button type="button" className="btn btn-secondary w-1/2" onClick={onCancel}>
+</div>
+   </div>
+
+
+
+
+        <div className="flex justify-center gap-2  mt-6">
+
+        <button type="button" className="btn  border-amber-900 bg-transparent   hover:bg-amber-700  text-blue-950 font-bold py-2 px-2 rounded-lg w-20" onClick={onCancel}>
             Cancel
           </button>
+          <button type="submit" className="btn bg-amber-900 hover:bg-amber-700 w-20  text-white font-bold py-2 px-2 rounded-lg" disabled={uploading}>
+            {uploading ? 'Uploading...' : 'Update '}
+          </button>
+       
         </div>
       </form>
     </div>

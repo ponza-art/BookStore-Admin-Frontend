@@ -61,28 +61,28 @@ const ManageUsers = () => {
   }
 
   return (
-    <div className="container mx-auto my-8">
-      <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
-      <table className="table-auto w-full  shadow-md rounded mb-8">
+    <div className="container mx-auto my-8 p-4 lg:p-8 flex flex-col items-center shadow-lg rounded-lg">
+      <h2 className="text-3xl text-amber-900  font-bold mb-12">Manage Users</h2>
+      <table className="table-auto tab-border-3 w-full text-center shadow-md rounded-lg mb-8 ">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Username</th>
-            <th className="px-4 py-2">Email</th>
-            <th className="px-4 py-2">Status</th>
+          <tr className="bg-[#e2d6d6] tab-border-2  text-sm">
+            <th className="px-4 py-2 border">ID</th>
+            <th className="px-4 py-2 border">Username</th>
+            <th className="px-4 py-2 border">Email</th>
+            <th className="px-4 py-2 border">Status</th>
        
           </tr>
         </thead>
         <tbody>
           {users.length > 0 ? (
             users.map((user) => (
-              <tr key={user._id} className="border-t">
-                <td className="px-4 py-2">{user._id}</td>
-                <td className="px-4 py-2">{user.username}</td>
-                <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2">
+              <tr key={user._id} className="border-t hover:bg-gray-100">
+                <td className="px-4 py-2 border">{user._id}</td>
+                <td className="px-4 py-2 border">{user.username}</td>
+                <td className="px-4 py-2 border">{user.email}</td>
+                <td className="px-4 py-2 border">
                   <button
-                    className={`btn ${user.status ? 'btn-error' : 'btn-primary'} mr-2`}
+                    className={`btn border   ${user.status ? 'text-rose-900 ' : 'btn-primary'} mr-2`}
                     onClick={() => handleStatus(user._id, !user.status)}
                   >
                     {user.status ? 'Block' : 'active'}
