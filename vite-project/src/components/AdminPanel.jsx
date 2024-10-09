@@ -42,7 +42,7 @@ const AdminPanel = () => {
     return (
       <span
         className="loading loading-bars  loading-lg text-cyan-900"
-        style={{ width: "350px", margin: "30vh 40vw" }}
+        style={{ width: "20%", margin: "30vh 30vw" }}
       ></span>
     );
   }
