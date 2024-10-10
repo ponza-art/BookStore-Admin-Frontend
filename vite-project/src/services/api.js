@@ -14,6 +14,7 @@ export const addBook = async (book, sourcePath, coverImage, samplePdf) => {
     formData.append("price", book.price);
     formData.append("category", book.category);
     formData.append("authorName", book.author);
+    formData.append("discountPercentage", book.discountPercentage);  // New field for discount percentage
     formData.append("file", sourcePath);     // Book file
     formData.append("cover", coverImage);    // Cover Image file
     formData.append("sample", samplePdf);    // Sample PDF file
@@ -32,16 +33,17 @@ export const addBook = async (book, sourcePath, coverImage, samplePdf) => {
     }
 };
 
+
 // Update an existing book
-// Updated Frontend API Function
 export const updateBook = async (id, updatedBook, coverImage, samplePdf, sourcePath) => {
     const formData = new FormData();
     formData.append("title", updatedBook.title);
     formData.append("description", updatedBook.description);
     formData.append("price", updatedBook.price);
     formData.append("category", updatedBook.category);
-    formData.append("authorName", updatedBook.authorName); // Ensure authorName field is sent to backend
-    
+    formData.append("authorName", updatedBook.authorName);
+    formData.append("discountPercentage", updatedBook.discountPercentage); // New discount percentage field
+
     // Optional file updates
     if (coverImage) formData.append("cover", coverImage);  // Attach cover image file if provided
     if (samplePdf) formData.append("sample", samplePdf);   // Attach sample PDF file if provided
@@ -57,16 +59,16 @@ export const updateBook = async (id, updatedBook, coverImage, samplePdf, sourceP
         });
 
         if (!response.ok) {
-            // Backend returns an error response
             const errorData = await response.json();
             throw new Error(errorData.error || "Failed to update book");
         }
 
-        return await response.json(); // Return the updated book data
+        return await response.json();
     } catch (error) {
         throw new Error("Failed to update the book: " + error.message);
     }
 };
+
 
 
 // Delete a book from the backend
@@ -320,3 +322,42 @@ export const deleteAuthor = async (id) => {
         return { error: "Failed to delete author" };
     }
 };
+
+  export const getAllReviews = async () => {
+    const token = localStorage.getItem('token'); // Fetch token from localStorage
+  
+    const response = await fetch('https://book-store-backend-sigma-one.vercel.app/review/all-reviews', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach the token to the header
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to fetch reviews');
+    }
+  
+    return response.json();
+  };
+
+  // api.js
+
+export const deleteReview = async (reviewId) => {
+    const token = localStorage.getItem('token'); 
+  
+    const response = await fetch(`https://book-store-backend-sigma-one.vercel.app/review/admin/${reviewId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, 
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to delete review');
+    }
+  
+    return response.json();
+  };
+  

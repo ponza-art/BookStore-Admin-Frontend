@@ -8,6 +8,7 @@ const AddBookForm = ({ onAdd, onClose }) => {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
+  const [discountPercentage, setDiscountPercentage] = useState(0); // New state
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [sourcePath, setSourcePath] = useState(null);
@@ -59,15 +60,18 @@ const AddBookForm = ({ onAdd, onClose }) => {
       return;
     }
 
+    const discountedPrice = price - (price * (discountPercentage / 100)); // Calculate discounted price
+
     setUploading(true);
 
     try {
-      await addBook({ title, description, price, category, author }, sourcePath, coverImage, samplePdf);
+      await addBook({ title, description, price, category, author, discountPercentage }, sourcePath, coverImage, samplePdf);
       setTitle('');
       setDescription('');
       setPrice('');
       setCategory('');
       setAuthor('');
+      setDiscountPercentage(0); // Reset discount percentage
       setSourcePath(null);
       setCoverImage(null);
       setSamplePdf(null);
@@ -84,10 +88,9 @@ const AddBookForm = ({ onAdd, onClose }) => {
   return (
     <div className="flex justify-center items-center ">
       <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full ">
-        <h2 className="text-3xl font-bold mb-6 text-center  text-[#844f4f] ">Add a New Book</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-[#844f4f] ">Add a New Book</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Title Input */}
           <input
             type="text"
             placeholder="Title"
@@ -96,7 +99,6 @@ const AddBookForm = ({ onAdd, onClose }) => {
             className="input input-bordered border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
           />
 
-          {/* Price Input */}
           <input
             type="number"
             placeholder="Price"
@@ -105,12 +107,18 @@ const AddBookForm = ({ onAdd, onClose }) => {
             className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
           />
 
-          
-          {/* Category Dropdown */}
+          <input
+            type="number"
+            placeholder="Discount Percentage"
+            value={discountPercentage}
+            onChange={(e) => setDiscountPercentage(e.target.value)}
+            className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          />
+
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="select select-bordered input  text-[#5b2c2c] font-medium   border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="select select-bordered input text-[#5b2c2c] font-medium border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
@@ -120,35 +128,30 @@ const AddBookForm = ({ onAdd, onClose }) => {
             ))}
           </select>
 
-          {/* Author Dropdown */}
           <select
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
-            className="select  text-[#5b2c2c] font-medium select-bordered input  border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="select text-[#5b2c2c] font-medium select-bordered input border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
           >
-            <option  className='text-[#936767]'  value="">Select Author</option>
+            <option className='text-[#936767]' value="">Select Author</option>
             {authors.map((auth) => (
-              <option className='text-[#936767]'  key={auth._id} value={auth.name}>
+              <option className='text-[#936767]' key={auth._id} value={auth.name}>
                 {auth.name}
               </option>
             ))}
           </select>
 
-   {/* Description Input */}
-   <textarea
+          <textarea
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="textarea textarea-bordered w-full input  border-blue-950 w focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
+            className="textarea textarea-bordered w-full input border-blue-950 focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
           />
-
-
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          {/* Source Path Upload */}
           <div className="mb-4">
-            <label htmlFor="sourcePath" className="block text-[#936767] -600 mb-2">The Full Book</label>
+            <label htmlFor="sourcePath" className="block text-[#936767] mb-2">The Full Book</label>
             <input
               type="file"
               name="sourcePath"
@@ -157,8 +160,8 @@ const AddBookForm = ({ onAdd, onClose }) => {
               className="file-input w-full border-gray-300"
             />
           </div>
-  {/* Sample PDF Upload */}
-  <div className="mb-6">
+
+          <div className="mb-6">
             <label htmlFor="samplePdf" className="block text-[#936767] mb-2">Sample</label>
             <input
               type="file"
@@ -169,8 +172,6 @@ const AddBookForm = ({ onAdd, onClose }) => {
             />
           </div>
 
-
-          {/* Cover Image Upload */}
           <div className="mb-4">
             <label htmlFor="coverImage" className="block text-[#936767] mb-2">Cover</label>
             <input
@@ -181,30 +182,24 @@ const AddBookForm = ({ onAdd, onClose }) => {
               className="file-input w-full border-gray-300"
             />
           </div>
-
-        
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-center gap-2  mt-6">
-              {/* Close Button */}
-              <button
+        <div className="flex justify-center gap-2 mt-6">
+          <button
             type="button"
             onClick={onClose}
-            className="btn  border-amber-900 bg-transparent  hover:bg-amber-700  text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
+            className="btn border-amber-900 bg-transparent hover:bg-amber-700 text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
           >
             Close
           </button>
 
           <button
             type="submit"
-            className={`btn bg-amber-900 hover:bg-amber-700  w-20  text-white font-bold py-2 px-2 rounded-lg  ${uploading && 'cursor-not-allowed'}`}
+            className={`btn bg-amber-900 hover:bg-amber-700 w-20 text-white font-bold py-2 px-2 rounded-lg ${uploading && 'cursor-not-allowed'}`}
             disabled={uploading}
           >
             {uploading ? 'Uploading...' : 'Add'}
           </button>
-
-      
         </div>
       </form>
     </div>

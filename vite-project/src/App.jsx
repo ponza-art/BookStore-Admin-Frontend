@@ -5,25 +5,17 @@ import ManageBooks from './components/ManageBooks';
 import ManageUsers from './components/ManageUsers';
 import ManageAuthors from './components/ManageAuthores';  
 import ManageCategories from "./components/ManageCategories";
+import ManageReviews from "./components/ManageReviews";
 import Header from "./components/Header";
 import Login from './components/Login'; 
 import ProtectedRoute from './components/ProtectedRoute'; 
+import "./index.css"
 
 function App() {
-  const [theme, setTheme] = useState('light');
+ 
   const [sidebarOpen, setSidebarOpen] = useState(false); 
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
+  
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen); 
 
   const handleLoginSuccess = (user) => {
@@ -35,7 +27,7 @@ function App() {
     <Router>
       <div className="flex">
         
-        <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} theme={theme} />
+        <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}  />
 
         <div className="flex-grow p-6">
           <Routes>
@@ -66,6 +58,11 @@ function App() {
             <Route path="/admin/categories" element={
               <ProtectedRoute>
                 <ManageCategories />
+              </ProtectedRoute>
+            } />
+             <Route path="/admin/reviews" element={
+              <ProtectedRoute>
+                <ManageReviews />
               </ProtectedRoute>
             } />
           </Routes>

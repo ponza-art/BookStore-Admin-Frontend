@@ -5,7 +5,8 @@ import toast from 'react-hot-toast';
 const EditBookForm = ({ book, onUpdateSuccess, onCancel }) => {
   const [title, setTitle] = useState(book.title || '');
   const [description, setDescription] = useState(book.description || '');
-  const [price, setPrice] = useState(book.price || '');
+  const [price, setPrice] = useState(book.originalPrice || '');
+  const [discountPercentage, setDiscountPercentage] = useState(book.discountPercentage || ''); 
   const [category, setCategory] = useState(book.category || '');
   const [authorName, setAuthorName] = useState(book.author || '');
   const [categories, setCategories] = useState([]);
@@ -16,7 +17,6 @@ const EditBookForm = ({ book, onUpdateSuccess, onCancel }) => {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    // Fetch authors and categories when component mounts
     const fetchData = async () => {
       try {
         const fetchedCategories = await getCategories();
@@ -55,12 +55,12 @@ const EditBookForm = ({ book, onUpdateSuccess, onCancel }) => {
       return;
     }
 
-    if (price < 0) {
-        toast.error('Price cannot be less than 0!');
-        return;
-      }
+    if (price < 0 || discountPercentage < 0 || discountPercentage > 100) {
+      toast.error('Price and discount percentage should be valid!');
+      return;
+    }
 
-    const updatedBook = { title, description, price, category, authorName };
+    const updatedBook = { title, description, price, category, authorName, discountPercentage };
 
     setUploading(true);
 
@@ -78,113 +78,103 @@ const EditBookForm = ({ book, onUpdateSuccess, onCancel }) => {
 
   return (
     <div className="flex justify-center items-center">
-      <form  className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full "  onSubmit={handleSubmit}>
-      <h2 className="text-3xl font-bold mb-6 text-center  text-[#844f4f] ">Edit Book</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input input-bordered border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+      <form className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full" onSubmit={handleSubmit}>
+        <h2 className="text-3xl font-bold mb-6 text-center text-[#844f4f]">Edit Book</h2>
 
-        />
-       
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input input-bordered border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          />
+          <input
+            type="number"
+            placeholder="Discount Percentage"
+            value={discountPercentage}
+            onChange={(e) => setDiscountPercentage(e.target.value)}
+            className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="select select-bordered input text-[#5b2c2c] font-medium border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          >
+            <option className='text-[#936767]' value="">Select Category</option>
+            {categories.map((cat) => (
+              <option className='text-[#936767]' key={cat._id} value={cat.title}>
+                {cat.title}
+              </option>
+            ))}
+          </select>
+          <select
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            className="select select-bordered input text-[#5b2c2c] font-medium border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+          >
+            <option className='text-[#936767]' value="">Select Author</option>
+            {authors.map((auth) => (
+              <option className='text-[#936767]' key={auth._id} value={auth.name}>
+                {auth.name}
+              </option>
+            ))}
+          </select>
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="textarea textarea-bordered w-full input border-blue-950 focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
+          />
+        </div>
 
-        />
-
-        {/* Category Dropdown */}
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="select select-bordered input  text-[#5b2c2c] font-medium   border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
-
-        >
-          <option className='text-[#936767]' value="">Select Category</option>
-          {categories.map((cat) => (
-            <option className='text-[#936767]' key={cat._id} value={cat.title}>
-              {cat.title}
-            </option>
-          ))}
-        </select>
-
-        {/* Author Dropdown */}
-        <select
-          value={authorName}
-          onChange={(e) => setAuthorName(e.target.value)}
-          className="select select-bordered input  text-[#5b2c2c] font-medium   border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
-
-        >
-          <option  className='text-[#936767]' value="">Select Author</option>
-          {authors.map((auth) => (
-            <option  className='text-[#936767]' key={auth._id} value={auth.name}>
-              {auth.name}
-            </option>
-          ))}
-        </select>
-
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="textarea textarea-bordered w-full input  border-blue-950 w focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
-
-        />
-
-</div>
-
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-<div className="mb-4">
-        <label className="block text-[#936767] -600 mb-2"  htmlFor="sourcePath"   >The Full Book</label>
-        <input
-          type="file"
-          name="sourcePath"
-          accept=".pdf"
-          onChange={(e) => handleFileChange(e, setSourcePath)}
-          className="file-input w-full mb-4  border-gray-300"
-        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div className="mb-4">
+            <label className="block text-[#936767] mb-2" htmlFor="sourcePath">The Full Book</label>
+            <input
+              type="file"
+              name="sourcePath"
+              accept=".pdf"
+              onChange={(e) => handleFileChange(e, setSourcePath)}
+              className="file-input w-full mb-4 border-gray-300"
+            />
           </div>
           <div className="mb-6">
-        <label   className="block text-[#936767] -600 mb-2"   htmlFor="coverImage">Cover</label>
-        <input
-          type="file"
-          name="coverImage"
-          accept="image/*"
-          onChange={(e) => handleFileChange(e, setCoverImage)}
-          className="file-input w-full mb-4  border-gray-300 "
-        />
+            <label className="block text-[#936767] mb-2" htmlFor="coverImage">Cover</label>
+            <input
+              type="file"
+              name="coverImage"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, setCoverImage)}
+              className="file-input w-full mb-4 border-gray-300"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-[#936767] mb-2" htmlFor="samplePdf">Sample</label>
+            <input
+              type="file"
+              name="samplePdf"
+              accept="application/pdf"
+              onChange={(e) => handleFileChange(e, setSamplePdf)}
+              className="file-input w-full mb-4 border-gray-300"
+            />
+          </div>
         </div>
-        <div className="mb-4">
-        <label  className="block text-[#936767] -600 mb-2"  htmlFor="samplePdf">Sample</label>
-        <input
-          type="file"
-          name="samplePdf"
-          accept="application/pdf"
-          onChange={(e) => handleFileChange(e, setSamplePdf)}
-          className="file-input w-full mb-4   border-gray-300"
-        />
-</div>
-   </div>
 
-
-
-
-        <div className="flex justify-center gap-2  mt-6">
-
-        <button type="button" className="btn  border-amber-900 bg-transparent   hover:bg-amber-700  text-blue-950 font-bold py-2 px-2 rounded-lg w-20" onClick={onCancel}>
+        <div className="flex justify-center gap-2 mt-6">
+          <button type="button" className="btn border-amber-900 bg-transparent hover:bg-amber-700 text-blue-950 font-bold py-2 px-2 rounded-lg w-20" onClick={onCancel}>
             Cancel
           </button>
-          <button type="submit" className="btn bg-amber-900 hover:bg-amber-700 w-20  text-white font-bold py-2 px-2 rounded-lg" disabled={uploading}>
-            {uploading ? 'Uploading...' : 'Update '}
+          <button type="submit" className="btn bg-amber-900 hover:bg-amber-700 w-20 text-white font-bold py-2 px-2 rounded-lg" disabled={uploading}>
+            {uploading ? 'Uploading...' : 'Update'}
           </button>
-       
         </div>
       </form>
     </div>

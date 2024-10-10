@@ -161,6 +161,19 @@ const AdminPanel = () => {
               Categories
             </Link>
           </div>
+          <div className="p-8 bg-white text-black rounded-lg h-44 border border-yellow-700">
+            <h2 className="text-2xl font-bold mb-2">Manage Reviews</h2>
+            <p className="text-md mb-2">
+              View and manage reviews to maintain user feedback and quality control.
+            </p>
+            <Link
+              to="/admin/reviews"
+              className="inline-block px-6 py-2 text-sm font-semibold text-white bg-yellow-800 rounded-md shadow-md hover:bg-yellow-700 transition-colors"
+            >
+              Reviews
+            </Link>
+          </div>
+
         </div>
       </div>
     </>

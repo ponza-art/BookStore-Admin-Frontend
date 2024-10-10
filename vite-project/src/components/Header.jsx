@@ -4,18 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { IoIosNotificationsOutline } from "react-icons/io";
 
-const Header = ({ toggleSidebar, sidebarOpen, theme }) => {
-  const [localTheme, setLocalTheme] = useState(theme);
+const Header = ({ toggleSidebar, sidebarOpen }) => {
+  
   const navigate = useNavigate();
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", localTheme);
-    localStorage.setItem("theme", localTheme);
-  }, [localTheme]);
-
-  const toggleTheme = () => {
-    setLocalTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
+ 
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -48,6 +41,9 @@ const Header = ({ toggleSidebar, sidebarOpen, theme }) => {
           <Link to="/admin/categories" className="flex items-center gap-2 px-4 py-2">
             <FaBoxes /> <span> Categories</span>
           </Link>
+          <Link to="/admin/reviews" className="flex items-center gap-2 px-4 py-2">
+            <FaUserCircle /> <span> Reviews</span>
+          </Link>
         </nav>
       </div>
 
@@ -60,18 +56,15 @@ const Header = ({ toggleSidebar, sidebarOpen, theme }) => {
         </button>
 
         <div className="flex items-center space-x-4">
-          <button onClick={toggleTheme} className="btn btn-circle btn-ghost">
-            {localTheme === "light" ? "🌙" : "☀️"}
-          </button>
-          <button onClick={toggleTheme} className="btn btn-circle btn-ghost">
-            < IoIosNotificationsOutline  className="text-3xl" />
-          </button>
+
 
           <div className="dropdown dropdown-bottom">
             <label tabIndex="0" className="btn btn-square btn-ghost">
               <FaUserCircle className="text-3xl" />
             </label>
-
+            <label tabIndex="0" className="btn btn-square btn-ghost">
+              <IoIosNotificationsOutline className="text-3xl" />
+            </label>
             <ul
               tabIndex="0"
               className="dropdown-content p-2 shadow bg-base-100 rounded-box w-52"

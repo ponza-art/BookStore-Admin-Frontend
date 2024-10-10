@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getBooks, deleteBook } from "../services/api";
 import AddBookForm from "./AddBookForm";
-import EditBookForm from "./EditBookForm"; // Import the new component
+import EditBookForm from "./EditBookForm"; 
 import toast, { Toaster } from "react-hot-toast";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 
@@ -52,7 +52,7 @@ const ManageBooks = () => {
   };
 
   const handleUpdateSuccess = () => {
-    fetchBooks(); // Refresh the book list after editing
+    fetchBooks(); 
     setEditingBook(null);
   };
 
@@ -61,24 +61,23 @@ const ManageBooks = () => {
   };
 
   const handleAddBookSuccess = () => {
-    fetchBooks(); // Refresh the book list after adding a new book
+    fetchBooks(); 
     setShowAddBookModal(false);
   };
 
   const handleCloseAddModal = () => {
-    setShowAddBookModal(false); // Close the modal when the "Close" button is clicked
+    setShowAddBookModal(false); 
   };
 
   return (
     <div className="container mx-auto my-8 p-4 lg:p-8 flex flex-col items-center shadow-lg rounded-lg">
       <Toaster />
-      <h2 className="text-3xl text-amber-900  font-bold mb-12 ">Manage Books</h2>
+      <h2 className="text-3xl text-amber-900 font-bold mb-12 ">Manage Books</h2>
       <button
         onClick={handleAddBook}
-        className="fixed  bg-transparent text-xl  hover:underline font-semibold  right-14 border-[#853e3e] text-[#936767] mb-5  px-3 py-10 "
-        
+        className="fixed bg-transparent text-xl hover:underline font-semibold right-14 border-[#853e3e] text-[#936767] mb-5  px-3 py-10"
       >
-     Add Book
+        Add Book
       </button>
       <div className="overflow-x-auto w-full">
         <table className="table-auto border w-full text-center shadow-md rounded-lg mb-8 ">
@@ -87,11 +86,13 @@ const ManageBooks = () => {
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Title</th>
               <th className="px-4 py-2 border">Description</th>
-              <th className="px-4 py-2 border">Price</th>
+              <th className="px-4 py-2 border">Original Price</th>
+              <th className="px-4 py-2 border">Discounted Price</th>
+              <th className="px-4 py-2 border">Discount (%)</th>
               <th className="px-4 py-2 border">Category</th>
               <th className="px-4 py-2 border">Author</th>
               <th className="px-4 py-2 border">Cover</th>
-              <th className="px-4 py-2 border"> PDF</th>
+              <th className="px-4 py-2 border">PDF</th>
               <th className="px-4 py-2 border">Link</th>
               <th className="px-4 py-2 border">Actions</th>
             </tr>
@@ -103,7 +104,9 @@ const ManageBooks = () => {
                   <td className="px-4 py-2 border">{index + 1}</td>
                   <td className="px-4 py-2 border text-sm truncate">{book.title}</td>
                   <td className="px-4 py-2 border text-sm truncate max-w-xs">{book.description}</td>
-                  <td className="px-4 py-2 border">${book.price}</td>
+                  <td className="px-4 py-2 border">${book.originalPrice.toFixed(2)}</td>
+                  <td className="px-4 py-2 border">${book.discountedPrice.toFixed(2)}</td>
+                  <td className="px-4 py-2 border">{book.discountPercentage}%</td>
                   <td className="px-4 py-2 border">{book.category}</td>
                   <td className="px-4 py-2 border">{book.author}</td>
                   <td className="px-4 py-2 border">
@@ -120,7 +123,7 @@ const ManageBooks = () => {
                       rel="noopener noreferrer"
                       className="text-amber-800 hover:underline"
                     >
-                       Sample
+                      Sample
                     </a>
                   </td>
                   <td className="px-4 py-2 border">
@@ -136,14 +139,14 @@ const ManageBooks = () => {
                   <td className="px-4 py-2 border">
                     <div className="flex justify-center ">
                       <button
-                        className=" text-[#612121] p-2  flex items-center justify-center"
+                        className="text-[#612121] p-2 flex items-center justify-center"
                         onClick={() => handleEdit(book)}
                         title="Edit Book"
                       >
                         <FaEdit size={16} />
                       </button>
                       <button
-                        className=" text-[#a42323] p-2  flex items-center justify-center"
+                        className="text-[#a42323] p-2 flex items-center justify-center"
                         onClick={() => handleDeleteClick(book)}
                         title="Delete Book"
                       >
@@ -155,7 +158,7 @@ const ManageBooks = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="10" className="text-center py-4">
+                <td colSpan="12" className="text-center py-4">
                   No books found
                 </td>
               </tr>
@@ -177,8 +180,8 @@ const ManageBooks = () => {
       )}
 
       {showAddBookModal && (
-        <div className="fixed  inset-0 flex items-center   justify-center bg-black bg-opacity-90">
-          <div className="modal-box bg-amber-900 p-3 rounded  max-w-2xl w-full mx-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90">
+          <div className="modal-box bg-amber-900 p-3 rounded max-w-2xl w-full mx-4">
             <AddBookForm
               onAdd={handleAddBookSuccess}
               onClose={handleCloseAddModal}
@@ -203,8 +206,7 @@ const ManageBooks = () => {
               </button>
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="btn  border-amber-900 bg-transparent  hover:bg-[#853e3e]  text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
-
+                className="btn border-amber-900 bg-transparent hover:bg-[#853e3e] text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
               >
                 Cancel
               </button>
@@ -212,8 +214,6 @@ const ManageBooks = () => {
           </div>
         </div>
       )}
-
- 
     </div>
   );
 };
