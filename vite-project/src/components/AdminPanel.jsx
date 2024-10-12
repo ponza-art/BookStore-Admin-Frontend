@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getBooks } from "../services/api";
-import AdminFooter from "./adminFooter";
 import { BsGraphUp } from "react-icons/bs";
 import { FaBook, FaUsers, FaChartLine } from "react-icons/fa";
 
@@ -75,10 +74,10 @@ const AdminPanel = () => {
               <h2 className="text-lg font-semibold text-gray-500 text-center">
                 Last Uploaded Book
               </h2>
-              {/* <p className="text-2xl font-bold  text-yellow-800 text-center">
+              <p className="text-2xl font-bold  text-yellow-800 text-center">
                 {lastBook.title}
-              </p> */}
-              <p className="text-xl font-semibold text-yellow-800 text-center">
+              </p>
+              <p className="text-xl font-semibold text-cyan-7 00 text-center">
                 Uploaded On: {formatDate(lastBook.createdAt)}
               </p>
             </div>
