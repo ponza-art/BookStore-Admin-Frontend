@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPanel from "./components/AdminPanel";
 import ManageBooks from "./components/ManageBooks";
@@ -14,25 +14,39 @@ import "./index.css";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication status
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // New loading state
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setIsAuthenticated(true);
+    }
+    setLoading(false); // Set loading to false once the check is complete
+  }, [isAuthenticated]);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const handleLoginSuccess = (user) => {
     console.log("Logged in user:", user);
-    setIsAuthenticated(true); // Set user as authenticated after login
+    setIsAuthenticated(true);
   };
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <Router>
       <div className="flex">
-        {/* Only show the Header if user is authenticated */}
         {isAuthenticated && (
-          <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
+          <Header
+            toggleSidebar={toggleSidebar}
+            sidebarOpen={sidebarOpen}
+            onLogout={() => setIsAuthenticated(false)}
+          />
         )}
         <div className={isAuthenticated ? "flex-grow p-6" : "flex-grow"}>
           <Routes>
-            {/* Always show the login page if the user is not authenticated */}
             {!isAuthenticated ? (
               <Route
                 path="*"
