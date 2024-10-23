@@ -5,6 +5,9 @@ import { FaBook, FaUsers, FaUserCircle, FaBoxes } from "react-icons/fa";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationDrawer from "./NotificationDrawer";
+import { IoHome } from "react-icons/io5";
+import { FaComment } from "react-icons/fa";
+import { RiMenu2Fill, RiCloseLargeFill } from "react-icons/ri";
 
 const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
   const navigate = useNavigate();
@@ -69,76 +72,95 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
   return (
     <>
       <div
-        className={`w-64 h-screen shadow-lg fixed top-0 left-0 bg-white lg:static lg:w-auto lg:flex lg:flex-col transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`w-64 h-lvh shadow-lg fixed top-0 left-0 bg-white lg:sticky lg:w-fit px-5 lg:flex lg:flex-col transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0 overflow-auto" : "-translate-x-full"
         } lg:translate-x-0`}
       >
-        <div className="flex lg:flex-col items-center justify-between w-full p-4 lg:p-0">
-          <Link to="/admin" className="mx-4 lg:mx-10">
-            <img
-              src={"/logo-removebg.png"}
-              alt="logo"
-              className="w-24 lg:w-55 h-16 lg:h-24"
-            />
+        <div
+          className={`flex lg:flex-col h-16 lg:h-24 items-start justify-between w-full p-4 mt-[45px] lg:mt-0 lg:p-0 ${
+            sidebarOpen ? "mb-16" : "mb-0"
+          }`}
+        >
+          <Link to="/" className="w-32 lg:w-55 mx-4 my-auto lg:mx-10">
+            <img src={"/logo-removebg.png"} alt="logo" className="" />
           </Link>
         </div>
 
-        {/* Sidebar Menu Links */}
-        <nav className="flex flex-col font-semibold text-2xl text-orange-900 mt-6 gap-12">
-          <Link to="/admin/books" className="flex items-center gap-2 px-4 py-2">
-            <FaBook /> <span>Books</span>
+        <nav className="flex flex-col font-semibold text-2xl text-orange-900 my-6 gap-12 overflow-auto">
+          <Link to="/" className="flex items-center justify-center ps-5">
+            <div className="flex items-center gap-5 w-full">
+              <IoHome /> <span>Home</span>
+            </div>
           </Link>
-          <Link to="/admin/users" className="flex items-center gap-2 px-4 py-2">
-            <FaUsers /> <span>Users</span>
+          <Link to="/books" className="flex items-center justify-center ps-5">
+            <div className="flex items-center gap-5 w-full">
+              <FaBook /> <span>Books</span>
+            </div>
+          </Link>
+          <Link to="/users" className="flex items-center justify-center ps-5">
+            <div className="flex items-center gap-5 w-full">
+              <FaUsers /> <span>Users</span>
+            </div>
+          </Link>
+          <Link to="/authors" className="flex items-center justify-center ps-5">
+            <div className="flex items-center gap-5 w-full">
+              <FaUserCircle /> <span>Authors</span>
+            </div>
           </Link>
           <Link
-            to="/admin/authors"
-            className="flex items-center gap-2 px-4 py-2"
+            to="/categories"
+            className="flex items-center justify-center ps-5"
           >
-            <FaUserCircle /> <span>Authors</span>
+            <div className="flex items-center gap-5 w-full">
+              <FaBoxes /> <span>Categories</span>
+            </div>
           </Link>
-          <Link
-            to="/admin/categories"
-            className="flex items-center gap-2 px-4 py-2"
-          >
-            <FaBoxes /> <span>Categories</span>
+          <Link to="/reviews" className="flex items-center justify-center ps-5">
+            <div className="flex items-center gap-5 w-full">
+              <FaComment /> <span>Reviews</span>
+            </div>
           </Link>
         </nav>
       </div>
 
-      {/* Header with Notification Icon and Logout */}
-      <div className="flex items-center justify-between fixed top-4 right-4 w-full lg:w-auto px-5 bg-white lg:bg-transparent">
+      <div className="flex items-center justify-between fixed top-0 right-0 w-full lg:w-auto px-5 p-3 bg-white">
         <button
           onClick={toggleSidebar}
           className="lg:hidden btn btn-square btn-ghost"
         >
-          {sidebarOpen ? "Close" : "Menu"}
+          {sidebarOpen ? (
+            <RiCloseLargeFill size={24} />
+          ) : (
+            <RiMenu2Fill size={24} />
+          )}
         </button>
 
         <div className="flex items-center space-x-4">
-          {/* Notification Icon - Separate from User Dropdown */}
           <button className="btn btn-square btn-ghost" onClick={toggleDrawer}>
             <IoIosNotificationsOutline className="text-3xl" />
           </button>
 
-          {/* User Icon with Logout in Dropdown */}
-          <div className="dropdown dropdown-bottom">
-            <label tabIndex="0" className="btn btn-square btn-ghost">
+          <div className="dropdown dropdown-end">
+            <label tabIndex="0" className="btn btn-square avatar btn-ghost">
               <FaUserCircle className="text-3xl" />
             </label>
             <ul
               tabIndex="0"
-              className="dropdown-content p-2 shadow bg-base-100 rounded-box w-52"
+              className="menu dropdown-content shadow bg-base-100 rounded-lg w-52"
             >
-              <li>
-                <button onClick={handleLogout}>Logout</button>
+              <li className="w-full">
+                <button
+                  className="w-full p-2 text-start"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      {/* Notification Drawer */}
       <NotificationDrawer
         isOpen={isDrawerOpen}
         toggleDrawer={toggleDrawer}

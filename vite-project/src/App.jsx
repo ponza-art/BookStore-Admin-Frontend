@@ -21,7 +21,7 @@ function App() {
     if (localStorage.getItem("token")) {
       setIsAuthenticated(true);
     }
-    setLoading(false); // Set loading to false once the check is complete
+    setLoading(false);
   }, [isAuthenticated]);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -45,7 +45,7 @@ function App() {
             onLogout={() => setIsAuthenticated(false)}
           />
         )}
-        <div className={isAuthenticated ? "flex-grow p-6" : "flex-grow"}>
+        <div className={isAuthenticated ? "flex-grow p-8" : "flex-grow"}>
           <Routes>
             {!isAuthenticated ? (
               <Route
@@ -55,7 +55,7 @@ function App() {
             ) : (
               <>
                 <Route
-                  path="/admin"
+                  path="/"
                   element={
                     <ProtectedRoute>
                       <AdminPanel />
@@ -63,7 +63,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/admin/books"
+                  path="/books"
                   element={
                     <ProtectedRoute>
                       <ManageBooks />
@@ -71,7 +71,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/admin/users"
+                  path="/users"
                   element={
                     <ProtectedRoute>
                       <ManageUsers />
@@ -79,7 +79,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/admin/authors"
+                  path="/authors"
                   element={
                     <ProtectedRoute>
                       <ManageAuthors />
@@ -87,7 +87,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/admin/categories"
+                  path="/categories"
                   element={
                     <ProtectedRoute>
                       <ManageCategories />
@@ -95,7 +95,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/admin/reviews"
+                  path="/reviews"
                   element={
                     <ProtectedRoute>
                       <ManageReviews />
