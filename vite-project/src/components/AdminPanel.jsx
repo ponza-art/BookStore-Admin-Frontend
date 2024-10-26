@@ -1,248 +1,197 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  getBooks,
-  getUsers,
-  getAuthors,
-  getCategories,
-  getAllReviews,
-} from "../services/api";
-// import { BsGraphUp } from "react-icons/bs";
-import { FaBook, FaUsers, FaChartLine, FaPencilAlt } from "react-icons/fa";
+import { FaBook, FaUsers, FaChartLine, FaPencilAlt, FaDollarSign } from "react-icons/fa";
 import { MdRateReview } from "react-icons/md";
 import { BiCategoryAlt } from "react-icons/bi";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { getStats, getorders } from "../services/api";
+
+ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 const AdminPanel = () => {
-  const [books, setBooks] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [allCategories, setAllCategories] = useState([]);
-  const [allAuthors, setAllAuthors] = useState([]);
-  const [reviews, setReviews] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [chartData, setChartData] = useState(null);
+  const [chartError, setChartError] = useState(null);
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const bookData = await getBooks();
-        const usersData = await getUsers();
-        const categoriesData = await getCategories();
-        const authorsData = await getAuthors();
-        const reviewsData = await getAllReviews();
-        setBooks(bookData);
-        setAllCategories(categoriesData);
-        setAllAuthors(authorsData);
-        setReviews(reviewsData.length);
-        setUsers(usersData.data.Users.length);
+        const data = await getStats();
+        setStats(data);
       } catch (err) {
-        console.log(err);
-        setError("Failed to load Data.");
+        setError("Failed to load data.");
       } finally {
         setLoading(false);
       }
     };
 
+    const fetchOrdersData = async () => {
+      try {
+        const orders = await getorders();
+
+        const groupedOrders = orders.reduce((acc, order) => {
+          const date = new Date(order.createdAt).toLocaleDateString();
+          if (!acc[date]) {
+            acc[date] = 0;
+          }
+          acc[date] += order.totalAmount;
+          return acc;
+        }, {});
+
+        const labels = Object.keys(groupedOrders);
+        const data = Object.values(groupedOrders);
+        const total = data.reduce((sum, amount) => sum + amount, 0);
+
+        setTotalRevenue(total);
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: "Orders",
+              data,
+              backgroundColor: "rgba(0, 128, 255, 0.7)",
+              borderColor: "rgba(0, 128, 255, 1)",
+              borderWidth: 1,
+            },
+          ],
+        });
+      } catch (err) {
+        console.error(err);
+        setChartError("Failed to load order data.");
+      }
+    };
+
     fetchData();
+    fetchOrdersData();
   }, []);
 
-  const totalBooks = books.length;
-  const categories = allCategories.length;
-  const authors = allAuthors.length;
-
-  const lastBook = books.reduce((latest, book) => {
-    const bookDate = book.createdAt ? new Date(book.createdAt) : null;
-    const latestDate = latest?.createdAt ? new Date(latest.createdAt) : null;
-    return !latestDate || (bookDate && bookDate > latestDate) ? book : latest;
-  }, null);
-  const lastCategory = allCategories.reduce((last, cat) => {
-    const catDate = cat.createdAt ? new Date(cat.createdAt) : null;
-    const lastDate = last?.createdAt ? new Date(last.createdAt) : null;
-    return !lastDate || (catDate && catDate > lastDate) ? cat : last;
-  }, null);
-  const lastAuthor = allAuthors.reduce((last, auth) => {
-    const authDate = auth.createdAt ? new Date(auth.createdAt) : null;
-    const lastDate = last?.createdAt ? new Date(last.createdAt) : null;
-    return !lastDate || (authDate && authDate > lastDate) ? auth : last;
-  }, null);
-
-  const formatDate = (date) => {
-    return date ? new Date(date).toLocaleDateString() : "N/A";
-  };
+  const formatDate = (date) => (date ? new Date(date).toLocaleDateString() : "N/A");
 
   if (loading) {
     return (
+      <div className="flex justify-center items-center">
       <span
-        className="loading loading-bars  loading-lg text-cyan-900"
+        className="loading loading-bars loading-lg text-blue-800"
         style={{ width: "20%", margin: "30vh 30vw" }}
       ></span>
-    );
+    </div>
+    )
+    
   }
 
   if (error) {
     return <p>{error}</p>;
   }
 
-  let statistics = [
+  const options = {
+    plugins: {
+      title: {
+        display: true,
+        text: "Order Totals",
+        font: { size: 16, weight: "bold" },
+      },
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context) => `Order Total: $${context.raw}`,
+        },
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { beginAtZero: true },
+      y: { beginAtZero: true, max: Math.max(...(chartData?.datasets[0].data || [100])) + 10 },
+    },
+  };
+
+  const statistics = [
     {
       icon: FaBook,
       label: "Total Books",
-      value: totalBooks,
-      condition: true,
+      value: stats.books.count,
     },
-    // {
-    //   icon: BsGraphUp,
-    //   label: "Pending Leads",
-    //   value: 450,
-    //   condition: true,
-    // },
     {
       icon: FaPencilAlt,
       label: "Total Authors",
-      value: authors,
-      condition: true,
+      value: stats.authors.count,
     },
     {
       icon: BiCategoryAlt,
       label: "Total Categories",
-      value: categories,
-      condition: true,
+      value: stats.categories.count,
     },
     {
       icon: FaUsers,
       label: "Total Users",
-      value: users,
-      condition: true,
+      value: stats.users.count,
     },
     {
       icon: MdRateReview,
       label: "Total Reviews",
-      value: reviews,
-      condition: true,
+      value: stats.reviews.count,
     },
     {
       icon: FaChartLine,
       label: "Last Uploaded Book",
-      value: lastBook?.title,
-      options: `Date: ${formatDate(lastBook.createdAt)}`,
-      condition: lastBook,
+      value: stats.books.latest?.title,
+      options: `Date: ${formatDate(stats.books.latest?.createdAt)}`,
     },
     {
       icon: FaChartLine,
       label: "Last Uploaded Category",
-      value: lastCategory?.title,
-      options: `Date: ${formatDate(lastCategory.createdAt)}`,
-      condition: lastCategory,
+      value: stats.categories.latest?.title,
+      options: `Date: ${formatDate(stats.categories.latest?.createdAt)}`,
     },
     {
       icon: FaChartLine,
       label: "Last Uploaded Author",
-      value: lastAuthor?.name,
-      options: `Date: ${formatDate(lastAuthor.createdAt)}`,
-      condition: lastAuthor,
-    },
-  ];
-
-  let blocks = [
-    {
-      label: "Manage Books",
-      description:
-        "Easily add, update, or remove book details to keep your library organized and up-to-date.",
-      route: "/books",
-      routeLabel: "Books",
-    },
-    {
-      label: "Manage Users",
-      description:
-        "View and manage registered users to ensure a smooth user experience.",
-      route: "/users",
-      routeLabel: "Users",
-    },
-    {
-      label: "Manage Authors",
-      description:
-        "View and manage registered authors to maintain a rich and diverse library.",
-      route: "/authors",
-      routeLabel: "Authors",
-    },
-    {
-      label: "Manage Categories",
-      description:
-        "View and organize book categories for better navigation and discovery.",
-      route: "/categories",
-      routeLabel: "Categories",
-    },
-    {
-      label: "Manage Reviews",
-      description:
-        "View and manage reviews to maintain user feedback and quality control.",
-      route: "/reviews",
-      routeLabel: "Reviews",
+      value: stats.authors.latest?.name,
+      options: `Date: ${formatDate(stats.authors.latest?.createdAt)}`,
     },
   ];
 
   return (
-    <>
-      <div className="p-4 my-5 text-center">
-        <h1 className="text-3xl text-blue-950  font-bold mb-12">
-          Admin Dashboard
-        </h1>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7">
-          {statistics.map((stat, index) =>
-            stat.condition ? (
-              <div
-                key={index}
-                className="py-8 flex flex-col items-center gap-2 justify-center bg-white rounded-lg shadow-lg border border-gray-200"
-              >
-                <stat.icon className="text-3xl text-blue-950 mb-2" />
-                <h2 className="text-lg font-semibold text-gray-500 text-center">
-                  {stat.label}
-                </h2>
-                <p
-                  className={`${
-                    typeof stat.options != "string"
-                      ? "text-2xl"
-                      : "text-lg mb-1"
-                  } font-bold text-blue-950 text-center`}
-                >
-                  {stat.value}
-                </p>
-                {stat.options && (
-                  <p className="text-xl font-semibold text-cyan-7 00 text-center">
-                    {stat.options}
-                  </p>
-                )}
-              </div>
-            ) : (
-              ""
-            )
-          )}
+    <div className="p-4 my-5 text-center">
+      <h1 className="text-3xl text-blue-950 font-bold mb-12">Admin Dashboard</h1>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 w-full mx-auto gap-4">
+        <div className="w-full md:w-2/3 h-[300px] md:h-[384.6px] p-4 bg-white rounded-lg shadow">
+          {chartData ? <Bar data={chartData} options={options} /> : <p>{chartError || "Loading orders data..."}</p>}
         </div>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7 my-8 mb-7 mx-auto">
-          {blocks.map((block, index) => (
-            <div
-              key={index}
-              // className="min-w-80 max-w-[50%] p-8 flex flex-col justify-between gap-4 bg-white text-black rounded-lg border border-yellow-700"
-              className="py-8 px-3 flex flex-col justify-between gap-4 overflow-hidden bg-white text-black rounded-lg border border-blue-800"
-            >
-              <div className="">
-                <h2 className="text-2xl font-bold mb-2">{block.label}</h2>
-              </div>
-              <p className="text-md mb-2 text-ellipsis overflow-hidden line-clamp-2">
-                {block.description}
-              </p>
-              <Link
-                to={block.route}
-                className="w-fit mx-auto px-6 py-2 text-sm font-semibold text-white bg-blue-800 rounded-md shadow-md hover:bg-blue-950 transition-colors"
-              >
-                {block.routeLabel}
-              </Link>
-            </div>
-          ))}
+        <div className="w-full md:w-1/3 h-[150px] md:h-96 flex items-center justify-center p-4 bg-white rounded-lg shadow text-center">
+          <div>
+            <h2 className="text-xl  font-semibold text-gray-500">Total Revenue</h2>
+            <p className="text-3xl font-bold text-blue-950">EGP {totalRevenue.toFixed(2)}</p>
+          </div>
         </div>
       </div>
-    </>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {statistics.map((stat, index) => (
+          <div
+            key={index}
+            className="py-8 flex flex-col items-center gap-2 bg-white rounded-lg shadow-lg border border-gray-200"
+          >
+            <stat.icon className="text-3xl text-blue-950 mb-2" />
+            <h2 className="text-lg font-semibold text-gray-500">{stat.label}</h2>
+            <p className="text-2xl font-bold text-blue-950">{stat.value}</p>
+            {stat.options && <p className="text-xl font-semibold text-cyan-700">{stat.options}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

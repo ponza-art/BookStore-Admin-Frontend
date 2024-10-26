@@ -287,6 +287,28 @@ export const getAuthors = async () => {
   }
 };
 
+export const getorders = async () => {
+  try {
+    const response = await fetch(
+      "https://book-store-backend-sigma-one.vercel.app/orders/all",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error fetching authors: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to fetch authors" };
+  }
+};
+
 export const addAuthor = async (author) => {
   try {
     const response = await fetch(
@@ -398,4 +420,25 @@ export const deleteReview = async (reviewId) => {
   }
 
   return response.json();
+};
+
+
+export const getStats = async () => {
+  try {
+    const response = await fetch("https://book-store-backend-sigma-one.vercel.app/admin/stats", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch statistics");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    throw error;
+  }
 };
