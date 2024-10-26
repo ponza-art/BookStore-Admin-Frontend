@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaBook, FaUsers, FaChartLine, FaPencilAlt, FaDollarSign } from "react-icons/fa";
 import { MdRateReview } from "react-icons/md";
 import { BiCategoryAlt } from "react-icons/bi";
+import { FaMoneyBillWave } from "react-icons/fa";
+
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -172,6 +174,7 @@ const AdminPanel = () => {
         </div>
         <div className="w-full md:w-1/3 h-[150px] md:h-96 flex items-center justify-center p-4 bg-white rounded-lg shadow text-center">
           <div>
+          <FaMoneyBillWave className="text-6xl text-blue-900 mb-2 mx-auto" />
             <h2 className="text-xl  font-semibold text-gray-500">Total Revenue</h2>
             <p className="text-3xl font-bold text-blue-950">EGP {totalRevenue.toFixed(2)}</p>
           </div>
