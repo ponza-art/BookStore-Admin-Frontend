@@ -424,11 +424,14 @@ export const deleteReview = async (reviewId) => {
 
 
 export const getStats = async () => {
+  const token = localStorage.getItem("token");
+
   try {
     const response = await fetch("https://book-store-backend-sigma-one.vercel.app/admin/stats", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 

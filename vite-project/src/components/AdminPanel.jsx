@@ -102,7 +102,8 @@ const AdminPanel = () => {
       title: {
         display: true,
         text: "Order Totals",
-        font: { size: 16, weight: "bold" },
+        color: "#172554",
+        font: { size: 16, weight: "bolder" },
       },
       legend: { display: false },
       tooltip: {
@@ -114,10 +115,24 @@ const AdminPanel = () => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { beginAtZero: true },
-      y: { beginAtZero: true, max: Math.max(...(chartData?.datasets[0].data || [100])) + 10 },
+      x: {
+        beginAtZero: true,
+       
+        ticks: {
+          callback: function (value, index) {
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return daysOfWeek[index % daysOfWeek.length];
+          },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        max: 5000,
+       
+      },
     },
   };
+  
 
   const statistics = [
     {
@@ -174,9 +189,9 @@ const AdminPanel = () => {
         </div>
         <div className="w-full md:w-1/3 h-[150px] md:h-96 flex items-center justify-center p-4 bg-white rounded-lg shadow text-center">
           <div>
-          <FaMoneyBillWave className="text-6xl text-blue-900 mb-2 mx-auto" />
+          <FaMoneyBillWave className="md:text-6xl text-3xl text-blue-900 mb-2 mx-auto" />
             <h2 className="text-xl  font-semibold text-gray-500">Total Revenue</h2>
-            <p className="text-3xl font-bold text-blue-950">EGP {totalRevenue.toFixed(2)}</p>
+            <p className="md:text-3xl text-lg font-bold text-blue-950">EGP {totalRevenue.toFixed(0)}</p>
           </div>
         </div>
       </div>
