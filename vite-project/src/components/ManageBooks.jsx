@@ -70,7 +70,7 @@ const ManageBooks = () => {
       setLoading(false);
       setShowDeleteModal(false);
       setBookToDelete(null);
-    }
+    } 
   };
 
   const handleEdit = (book) => {
