@@ -7,15 +7,22 @@ import { toast } from "react-toastify";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [error, setError] = useState(null);
   const [enable, setEnable] = useState(true);
   const [loading, setLoading] = useState(true);
+
+  // Search and Pagination State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Customize items per page
 
   useEffect(() => {
     getUsers()
       .then((data) => {
         if (data && data.data && data.data.Users) {
           setUsers(data.data.Users);
+          setFilteredUsers(data.data.Users);
         } else {
           setError("No users found in the response.");
         }
@@ -29,6 +36,15 @@ const ManageUsers = () => {
       });
   }, []);
 
+  useEffect(() => {
+    // Filter users based on search query
+    const filtered = users.filter((user) =>
+      user.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+    setCurrentPage(1); // Reset to first page when search changes
+  }, [users, searchQuery]);
+
   const handleStatus = (id, newStatus) => {
     setEnable(false);
     userStatus(id, newStatus)
@@ -38,18 +54,12 @@ const ManageUsers = () => {
             user._id === id ? { ...user, status: newStatus } : user
           )
         );
-        setEnable(true);
         toast.success(
           `User status updated to ${newStatus ? "active" : "blocked"}`
         );
       })
-      .catch((err) => {
-        setEnable(true);
-        toast.error("Failed to update user status");
-      })
-      .finally(() => {
-        setEnable(true);
-      });
+      .catch(() => toast.error("Failed to update user status"))
+      .finally(() => setEnable(true));
   };
 
   const handleDelete = (id) => {
@@ -66,11 +76,17 @@ const ManageUsers = () => {
     }
   };
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  // Pagination calculations
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
-  if (loading) {
+  const handlePageChange = (page) => setCurrentPage(page);
+
+  if (error) return <div>Error: {error}</div>;
+
+  if (loading)
     return (
       <div className="flex justify-center items-center">
         <span
@@ -79,13 +95,24 @@ const ManageUsers = () => {
         ></span>
       </div>
     );
-  }
 
   return (
     <div className="py-6 mt-16 lg:mt-11 bg-base-100 text-neutral font-sans p-4 lg:p-8 flex flex-col items-center shadow-lg rounded-lg">
       <h2 className="text-3xl lg:self-start text-center sm:text-left font-bold mb-6">
         Manage Users
       </h2>
+      
+      {/* Search Input */}
+      <div className="my-4 w-full">
+        <input
+          type="text"
+          placeholder="Search by username"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-gray-300 p-2 rounded-md w-full"
+        />
+      </div>
+
       <div className="overflow-x-auto w-full">
         <table className="table w-full text-center rounded-lg mb-3">
           <thead>
@@ -97,8 +124,8 @@ const ManageUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {users.length > 0 ? (
-              users.map((user) => (
+            {paginatedUsers.length > 0 ? (
+              paginatedUsers.map((user) => (
                 <tr key={user._id} className="border-t hover:bg-gray-100">
                   <td className="px-4 py-2 text-start">{user._id}</td>
                   <td className="px-4 py-2 text-start">{user.username}</td>
@@ -113,18 +140,9 @@ const ManageUsers = () => {
                       } mr-2`}
                       onClick={() => handleStatus(user._id, !user.status)}
                     >
-                      {user.status ? (
-                        <CgUnblock size={24} />
-                      ) : (
-                        <CgBlock size={24} />
-                      )}
+                      {user.status ? <CgUnblock size={24} /> : <CgBlock size={24} />}
                     </button>
                   </td>
-
-                  {/* <td className="px-4 py-2">
-                  <button className="btn btn-primary mr-2">Edit</button>
-                  <button className="btn btn-error" onClick={() => handleDelete(user._id)}>Delete</button>
-                </td> */}
                 </tr>
               ))
             ) : (
@@ -136,6 +154,21 @@ const ManageUsers = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center gap-2 mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-3 py-1 rounded ${
+              index + 1 === currentPage ? "bg-blue-800 text-white" : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
