@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { login } from "../services/auth";
@@ -13,7 +14,7 @@ const Login = ({ onLoginSuccess }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/admin");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -26,15 +27,15 @@ const Login = ({ onLoginSuccess }) => {
       const response = await login(email, password);
       console.log("Login Response:", response);
       if (response && response.data) {
-        localStorage.setItem("token", response.data.user.token);
-        onLoginSuccess(response.data.user);
         if (response.data.user.isAdmin) {
+          onLoginSuccess(response.data.user);
+          localStorage.setItem("token", response.data.user.token);
           navigate("/");
         } else {
           setError("Access denied. You are not an admin.");
         }
       } else {
-        setError("Unexpected response format.");
+        setError("Invalid email or password");
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -51,7 +52,6 @@ const Login = ({ onLoginSuccess }) => {
         className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
           <input
@@ -74,9 +74,10 @@ const Login = ({ onLoginSuccess }) => {
             className="input input-bordered w-full"
           />
         </div>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <button
           type="submit"
-          className="btn btn-primary w-full"
+          className="btn bg-blue-800 hover:bg-blue-900 text-white w-full"
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Login"}
