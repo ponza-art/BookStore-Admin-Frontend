@@ -1,26 +1,36 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import {
-  getAuthors,
-  addAuthor,
-  updateAuthor,
-  deleteAuthor,
-} from "../services/api";
+import { getAuthors, addAuthor, updateAuthor, deleteAuthor } from "../services/api";
 import toast, { Toaster } from "react-hot-toast";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const ManageAuthors = () => {
   const [authors, setAuthors] = useState([]);
+  const [filteredAuthors, setFilteredAuthors] = useState([]);
   const [newAuthor, setNewAuthor] = useState({ name: "", image: null });
   const [editingAuthor, setEditingAuthor] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [enable, setEnable] = useState(true);
 
+  // Search and Pagination State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Customize items per page
+
   useEffect(() => {
     fetchAuthors();
   }, []);
+
+  useEffect(() => {
+    // Filter and paginate authors when search query or authors list changes
+    const filtered = authors.filter((author) =>
+      author.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredAuthors(filtered);
+    setCurrentPage(1); // Reset to first page on search change
+  }, [authors, searchQuery]);
 
   const fetchAuthors = async () => {
     try {
@@ -107,14 +117,6 @@ const ManageAuthors = () => {
       cancelButtonColor: "#e2e8f0",
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
-      didOpen: () => {
-        const popup = Swal.getPopup();
-        if (popup) {
-          popup.style.borderRadius = "12px";
-          const cancelButton = popup.querySelector(".swal2-cancel");
-          if (cancelButton) cancelButton.style.color = "black";
-        }
-      },
     });
 
     if (result.isConfirmed) {
@@ -123,31 +125,24 @@ const ManageAuthors = () => {
         await deleteAuthor(id);
         fetchAuthors();
         setLoading(false);
-        Swal.fire("Deleted!", "Author deleted successfully.", "success", {
-          didOpen: () => {
-            const popup = Swal.getPopup();
-            if (popup) {
-              popup.style.borderRadius = "12px";
-            }
-          },
-        });
-        // toast.success("Author deleted successfully!");
+        Swal.fire("Deleted!", "Author deleted successfully.", "success");
       } catch (error) {
         setLoading(false);
-        Swal.fire("Error!", "Failed to delete author.", "error", {
-          didOpen: () => {
-            const popup = Swal.getPopup();
-            if (popup) {
-              popup.style.borderRadius = "12px";
-            }
-          },
-        });
+        Swal.fire("Error!", "Failed to delete author.", "error");
         toast.error("Failed to delete author");
       } finally {
         setLoading(false);
       }
     }
   };
+
+  // Pagination calculations
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedAuthors = filteredAuthors.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredAuthors.length / itemsPerPage);
+
+  const handlePageChange = (page) => setCurrentPage(page);
 
   if (!loading)
     return (
@@ -175,7 +170,19 @@ const ManageAuthors = () => {
             Add Author
           </button>
         </div>
+
+        {/* Search Input */}
+        <div className="my-4">
+          <input
+            type="text"
+            placeholder="Search by author name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border border-gray-300 p-2 rounded-md w-full"
+          />
+        </div>
       </div>
+
       <div className="overflow-x-auto w-full">
         <table className="table w-full text-center rounded-lg mb-3">
           <thead>
@@ -187,10 +194,10 @@ const ManageAuthors = () => {
             </tr>
           </thead>
           <tbody>
-            {authors.length > 0 ? (
-              authors.map((author, index) => (
+            {paginatedAuthors.length > 0 ? (
+              paginatedAuthors.map((author, index) => (
                 <tr key={author._id} className="border-t hover:bg-gray-100">
-                  <td className="px-4 py-2 text-start">{index + 1}</td>
+                  <td className="px-4 py-2 text-start">{index + 1 + startIndex}</td>
                   <td className="px-4 py-2 text-start flex justify-start">
                     {author.image ? (
                       <img
@@ -234,19 +241,33 @@ const ManageAuthors = () => {
         </table>
       </div>
 
+      {/* Pagination Controls */}
+      <div className="flex justify-center gap-2 mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-3 py-1 rounded ${
+              index + 1 === currentPage ? "bg-blue-800 text-white" : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+
+      {/* Modal for Adding/Editing Authors */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-30">
           <div className="p-3 rounded-xl max-w-2xl w-full mx-4">
             <div className="bg-white rounded-xl p-8 max-w-4xl w-full">
               <h3 className="text-2xl text-center font-bold mb-4">
-                Add Author
+                {editingAuthor ? "Edit Author" : "Add Author"}
               </h3>
               <input
                 type="text"
                 value={newAuthor.name}
-                onChange={(e) =>
-                  setNewAuthor({ ...newAuthor, name: e.target.value })
-                }
+                onChange={(e) => setNewAuthor({ ...newAuthor, name: e.target.value })}
                 placeholder="Author Name"
                 className="input input-bordered w-full my-4 border-blue-900 focus:ring"
               />
@@ -256,7 +277,7 @@ const ManageAuthors = () => {
                 onChange={handleImageChange}
                 className="file-input file-input-bordered w-full mb-4 border-blue-800 focus:border-blue-950 focus:ring focus:ring-blue-800"
               />
-              <div className="flex justify-center gap-2  mt-6">
+              <div className="flex justify-center gap-2 mt-6">
                 <button
                   disabled={!enable}
                   onClick={() => {
