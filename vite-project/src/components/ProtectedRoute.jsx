@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ setNotFound, children }) => {
   const token = localStorage.getItem("token");
+  useEffect(() => {
+    setNotFound(true);
+  }, []);
 
   // If no token is found, redirect to the login page
   if (!token) {
