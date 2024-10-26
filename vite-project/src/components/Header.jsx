@@ -5,9 +5,12 @@ import { FaBook, FaUsers, FaUserCircle, FaBoxes } from "react-icons/fa";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationDrawer from "./NotificationDrawer";
-import { IoHome } from "react-icons/io5";
 import { FaComment } from "react-icons/fa";
-import { RiMenu2Fill, RiCloseLargeFill } from "react-icons/ri";
+import {
+  RiMenu2Fill,
+  RiCloseLargeFill,
+  RiDashboard3Line,
+} from "react-icons/ri";
 
 const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
   const navigate = useNavigate();
@@ -23,7 +26,6 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
   const toggleDrawer = async () => {
     setIsDrawerOpen(!isDrawerOpen);
 
-    // Fetch messages when drawer is opened
     if (!isDrawerOpen) {
       try {
         const token = localStorage.getItem("token");
@@ -44,7 +46,6 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
     }
   };
 
-  // Delete function for messages
   const handleDelete = async (messageId) => {
     try {
       const token = localStorage.getItem("token");
@@ -68,28 +69,32 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
       console.error("Failed to delete message", error);
     }
   };
+  const logoStyle = {
+    filter: "invert(1) brightness(2)",
+  };
 
   return (
     <>
       <div
-        className={`w-64 h-lvh shadow-lg fixed top-0 left-0 bg-white lg:sticky lg:w-fit px-5 lg:flex lg:flex-col transition-transform duration-300 ${
+        className={`w-64 h-full lg:h-lvh shadow-lg z-10 fixed top-0 left-0 bg-[#1c2434] lg:sticky lg:w-fit px-5 lg:flex lg:flex-col transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0 overflow-auto" : "-translate-x-full"
         } lg:translate-x-0`}
       >
         <div
-          className={`flex lg:flex-col h-16 lg:h-24 items-start justify-between w-full p-4 mt-[45px] lg:mt-0 lg:p-0 ${
+          className={`lg:flex hidden lg:flex-col h-16 lg:h-24 items-start justify-between w-full p-4 mt-[60px] lg:mt-0 lg:p-0 duration-300 ${
             sidebarOpen ? "mb-16" : "mb-0"
           }`}
         >
           <Link to="/" className="w-32 lg:w-55 mx-4 my-auto lg:mx-10">
-            <img src={"/logo-removebg.png"} alt="logo" className="" />
+            <img src={"/logo-removebg.png"} alt="logo" style={logoStyle} />
           </Link>
         </div>
 
-        <nav className="flex flex-col font-semibold text-2xl text-orange-900 my-6 gap-12 overflow-auto">
+        <nav className="flex flex-col font-semibold text-2xl text-white lg:mt-4 mt-28 pb-6 gap-12 overflow-auto">
           <Link to="/" className="flex items-center justify-center ps-5">
             <div className="flex items-center gap-5 w-full">
-              <IoHome /> <span>Home</span>
+              <RiDashboard3Line />
+              <span>Dashboard</span>
             </div>
           </Link>
           <Link to="/books" className="flex items-center justify-center ps-5">
@@ -123,7 +128,7 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
         </nav>
       </div>
 
-      <div className="flex items-center justify-between fixed top-0 right-0 w-full lg:w-auto px-5 p-3 bg-white">
+      <div className="z-20 flex items-center justify-between fixed top-0 right-0 w-full lg:me-3 lg:w-auto lg:mt-3 px-2 py-2 lg:absolute bg-white lg:rounded-full">
         <button
           onClick={toggleSidebar}
           className="lg:hidden btn btn-square btn-ghost"
@@ -134,14 +139,26 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
             <RiMenu2Fill size={24} />
           )}
         </button>
+        <Link
+          to="/"
+          className="lg:hidden block w-32 lg:w-55 mx-4 my-auto lg:mx-10"
+        >
+          <img src={"/logo-removebg.png"} alt="logo" />
+        </Link>
 
-        <div className="flex items-center space-x-4">
-          <button className="btn btn-square btn-ghost" onClick={toggleDrawer}>
+        <div className="flex items-center justify-between space-x-4 lg:px-2">
+          <button
+            className="btn btn-sm btn-circle btn-ghost"
+            onClick={toggleDrawer}
+          >
             <IoIosNotificationsOutline className="text-3xl" />
           </button>
 
           <div className="dropdown dropdown-end">
-            <label tabIndex="0" className="btn btn-square avatar btn-ghost">
+            <label
+              tabIndex="0"
+              className="btn btn-sm btn-circle avatar btn-ghost"
+            >
               <FaUserCircle className="text-3xl" />
             </label>
             <ul
