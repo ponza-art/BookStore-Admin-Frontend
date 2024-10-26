@@ -86,11 +86,16 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
           }`}
         >
           <Link to="/" className="w-32 lg:w-55 mx-4 my-auto lg:mx-10">
-            <img src={"/logo-removebg.png"} alt="logo" style={logoStyle} />
+            <img
+              src={"/logo-transparent-svg.svg"}
+              alt="logo"
+              style={logoStyle}
+              className="w-28"
+            />
           </Link>
         </div>
 
-        <nav className="flex flex-col font-semibold text-2xl text-white lg:mt-4 mt-28 pb-6 gap-12 overflow-auto">
+        <nav className="flex flex-col font-semibold text-2xl text-white lg:mt-10 mt-32 pb-6 gap-12 overflow-auto">
           <Link to="/" className="flex items-center justify-center ps-5">
             <div className="flex items-center gap-5 w-full">
               <RiDashboard3Line />
@@ -128,7 +133,7 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
         </nav>
       </div>
 
-      <div className="z-20 flex items-center justify-between fixed top-0 right-0 w-full lg:me-3 lg:w-auto lg:mt-3 px-2 py-2 lg:absolute bg-white lg:rounded-full">
+      <div className="z-20 flex items-center justify-between fixed top-0 right-0 w-full lg:me-3 lg:w-auto lg:mt-3 px-4 py-2 lg:absolute bg-white lg:rounded-full">
         <button
           onClick={toggleSidebar}
           className="lg:hidden btn btn-square btn-ghost"
@@ -141,9 +146,9 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
         </button>
         <Link
           to="/"
-          className="lg:hidden block w-32 lg:w-55 mx-4 my-auto lg:mx-10"
+          className="lg:hidden block w-20 lg:w-55 mx-4 my-auto lg:mx-10"
         >
-          <img src={"/logo-removebg.png"} alt="logo" />
+          <img src={"/logo-transparent-svg.svg"} alt="logo" />
         </Link>
 
         <div className="flex items-center justify-between space-x-4 lg:px-2">
