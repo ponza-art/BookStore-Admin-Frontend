@@ -1,36 +1,69 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getBooks } from "../services/api";
-import { BsGraphUp } from "react-icons/bs";
-import { FaBook, FaUsers, FaChartLine } from "react-icons/fa";
+import {
+  getBooks,
+  getUsers,
+  getAuthors,
+  getCategories,
+  getAllReviews,
+} from "../services/api";
+// import { BsGraphUp } from "react-icons/bs";
+import { FaBook, FaUsers, FaChartLine, FaPencilAlt } from "react-icons/fa";
+import { MdRateReview } from "react-icons/md";
+import { BiCategoryAlt } from "react-icons/bi";
 
 const AdminPanel = () => {
   const [books, setBooks] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+  const [allAuthors, setAllAuthors] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchData = async () => {
       try {
         const bookData = await getBooks();
+        const usersData = await getUsers();
+        const categoriesData = await getCategories();
+        const authorsData = await getAuthors();
+        const reviewsData = await getAllReviews();
         setBooks(bookData);
+        setAllCategories(categoriesData);
+        setAllAuthors(authorsData);
+        setReviews(reviewsData.length);
+        setUsers(usersData.data.Users.length);
       } catch (err) {
-        setError("Failed to load books.");
+        console.log(err);
+        setError("Failed to load Data.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooks();
+    fetchData();
   }, []);
 
   const totalBooks = books.length;
+  const categories = allCategories.length;
+  const authors = allAuthors.length;
 
   const lastBook = books.reduce((latest, book) => {
     const bookDate = book.createdAt ? new Date(book.createdAt) : null;
     const latestDate = latest?.createdAt ? new Date(latest.createdAt) : null;
-
     return !latestDate || (bookDate && bookDate > latestDate) ? book : latest;
+  }, null);
+  const lastCategory = allCategories.reduce((last, cat) => {
+    const catDate = cat.createdAt ? new Date(cat.createdAt) : null;
+    const lastDate = last?.createdAt ? new Date(last.createdAt) : null;
+    return !lastDate || (catDate && catDate > lastDate) ? cat : last;
+  }, null);
+  const lastAuthor = allAuthors.reduce((last, auth) => {
+    const authDate = auth.createdAt ? new Date(auth.createdAt) : null;
+    const lastDate = last?.createdAt ? new Date(last.createdAt) : null;
+    return !lastDate || (authDate && authDate > lastDate) ? auth : last;
   }, null);
 
   const formatDate = (date) => {
@@ -50,129 +83,163 @@ const AdminPanel = () => {
     return <p>{error}</p>;
   }
 
+  let statistics = [
+    {
+      icon: FaBook,
+      label: "Total Books",
+      value: totalBooks,
+      condition: true,
+    },
+    // {
+    //   icon: BsGraphUp,
+    //   label: "Pending Leads",
+    //   value: 450,
+    //   condition: true,
+    // },
+    {
+      icon: FaPencilAlt,
+      label: "Total Authors",
+      value: authors,
+      condition: true,
+    },
+    {
+      icon: BiCategoryAlt,
+      label: "Total Categories",
+      value: categories,
+      condition: true,
+    },
+    {
+      icon: FaUsers,
+      label: "Total Users",
+      value: users,
+      condition: true,
+    },
+    {
+      icon: MdRateReview,
+      label: "Total Reviews",
+      value: reviews,
+      condition: true,
+    },
+    {
+      icon: FaChartLine,
+      label: "Last Uploaded Book",
+      value: lastBook?.title,
+      options: `Date: ${formatDate(lastBook.createdAt)}`,
+      condition: lastBook,
+    },
+    {
+      icon: FaChartLine,
+      label: "Last Uploaded Category",
+      value: lastCategory?.title,
+      options: `Date: ${formatDate(lastCategory.createdAt)}`,
+      condition: lastCategory,
+    },
+    {
+      icon: FaChartLine,
+      label: "Last Uploaded Author",
+      value: lastAuthor?.name,
+      options: `Date: ${formatDate(lastAuthor.createdAt)}`,
+      condition: lastAuthor,
+    },
+  ];
+
+  let blocks = [
+    {
+      label: "Manage Books",
+      description:
+        "Easily add, update, or remove book details to keep your library organized and up-to-date.",
+      route: "/books",
+      routeLabel: "Books",
+    },
+    {
+      label: "Manage Users",
+      description:
+        "View and manage registered users to ensure a smooth user experience.",
+      route: "/users",
+      routeLabel: "Users",
+    },
+    {
+      label: "Manage Authors",
+      description:
+        "View and manage registered authors to maintain a rich and diverse library.",
+      route: "/authors",
+      routeLabel: "Authors",
+    },
+    {
+      label: "Manage Categories",
+      description:
+        "View and organize book categories for better navigation and discovery.",
+      route: "/categories",
+      routeLabel: "Categories",
+    },
+    {
+      label: "Manage Reviews",
+      description:
+        "View and manage reviews to maintain user feedback and quality control.",
+      route: "/reviews",
+      routeLabel: "Reviews",
+    },
+  ];
+
   return (
     <>
-      <div className="p-4 my-5  text-center">
-        <h1 className="text-3xl text-amber-900  font-bold mb-12">
+      <div className="p-4 my-5 text-center">
+        <h1 className="text-3xl text-blue-950  font-bold mb-12">
           Admin Dashboard
         </h1>
-        {/* <Link to="/admin/add-book" className="bg-yellow-800 text-white px-4 py-2 rounded-md hover:bg-yellow-900">Add New Book</Link> */}
-        <div className="container  mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 my-7  mb-6">
-          <div className="p-6 bg-white rounded-lg shadow-lg border   border-gray-200 flex flex-col items-center justify-center">
-            <FaBook className="text-4xl text-yellow-800 mb-2" />
-            <h2 className="text-lg font-semibold text-gray-500 text-center">
-              Total Books
-            </h2>
-            <p className="text-4xl font-bold text-yellow-800 text-center">
-              {totalBooks}
-            </p>
-          </div>
-
-          {lastBook && (
-            <div className="p-6  bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col items-center justify-center">
-              <FaChartLine className="text-4xl text-yellow-800 mb-2" />
-              <h2 className="text-lg font-semibold text-gray-500 text-center">
-                Last Uploaded Book
-              </h2>
-              <p className="text-2xl font-bold  text-yellow-800 text-center">
-                {lastBook.title}
-              </p>
-              <p className="text-xl font-semibold text-cyan-7 00 text-center">
-                Uploaded On: {formatDate(lastBook.createdAt)}
-              </p>
-            </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7">
+          {statistics.map((stat, index) =>
+            stat.condition ? (
+              <div
+                key={index}
+                className="py-8 flex flex-col items-center gap-2 justify-center bg-white rounded-lg shadow-lg border border-gray-200"
+              >
+                <stat.icon className="text-3xl text-blue-950 mb-2" />
+                <h2 className="text-lg font-semibold text-gray-500 text-center">
+                  {stat.label}
+                </h2>
+                <p
+                  className={`${
+                    typeof stat.options != "string"
+                      ? "text-2xl"
+                      : "text-lg mb-1"
+                  } font-bold text-blue-950 text-center`}
+                >
+                  {stat.value}
+                </p>
+                {stat.options && (
+                  <p className="text-xl font-semibold text-cyan-7 00 text-center">
+                    {stat.options}
+                  </p>
+                )}
+              </div>
+            ) : (
+              ""
+            )
           )}
-
-          <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col items-center justify-center">
-            <BsGraphUp className="text-4xl text-yellow-800 mb-2" />
-            <h2 className="text-lg font-semibold text-gray-500 text-center">
-              Pending Leads
-            </h2>
-            <p className="text-4xl font-bold  text-yellow-800  text-center">
-              450
-            </p>
-          </div>
-
-          <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col items-center justify-center">
-            <FaUsers className="text-4xl  text-yellow-800 mb-2" />
-            <h2 className="text-lg font-semibold text-gray-500 text-center">
-              Active Users
-            </h2>
-            <p className="text-4xl font-bold text-yellow-800 text-center">
-              5.6k
-            </p>
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8   lg:w-[70%] mx-auto">
-          <div className="p-8  bg-white h-44  text-black rounded-lg border border-yellow-700">
-            <h2 className="text-2xl  font-bold mb-2">Manage Books</h2>
-            <p className="text-md mb-2">
-              Easily add, update, or remove book details to keep your library
-              organized and up-to-date.
-            </p>
-            <Link
-              to="/admin/books"
-              className="inline-block px-6 py-2 text-sm font-semibold text-white bg-yellow-800 rounded-md shadow-md hover:bg-yellow-700 transition-colors"
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7 my-8 mb-7 mx-auto">
+          {blocks.map((block, index) => (
+            <div
+              key={index}
+              // className="min-w-80 max-w-[50%] p-8 flex flex-col justify-between gap-4 bg-white text-black rounded-lg border border-yellow-700"
+              className="py-8 px-3 flex flex-col justify-between gap-4 overflow-hidden bg-white text-black rounded-lg border border-blue-800"
             >
-              Books
-            </Link>
-          </div>
-
-          <div className="p-8 bg-white text-black rounded-lg h-44 border border-yellow-700">
-            <h2 className="text-2xl font-bold mb-2">Manage Users</h2>
-            <p className="text-md mb-2">
-              View and manage registered users to ensure a smooth user
-              experience.
-            </p>
-            <Link
-              to="/admin/users"
-              className="inline-block px-6 py-2 text-sm font-semibold text-white  bg-yellow-800 rounded-md shadow-md hover:bg-yellow-700 transition-colors"
-            >
-              Users
-            </Link>
-          </div>
-
-          <div className="p-8 bg-white text-black h-44 rounded-lg border border-yellow-700">
-            <h2 className="text-2xl font-bold mb-2">Manage Authors</h2>
-            <p className="text-md mb-2">
-              View and manage registered authors to maintain a rich and diverse
-              library.
-            </p>
-            <Link
-              to="/admin/authors"
-              className="inline-block px-6 py-2 text-sm font-semibold text-white bg-yellow-800 rounded-md shadow-md hover:bg-yellow-700 transition-colors"
-            >
-              Authors
-            </Link>
-          </div>
-
-          <div className="p-8 bg-white text-black  h-44 rounded-lg border border-yellow-700">
-            <h2 className="text-2xl font-bold mb-2">Manage Categories</h2>
-            <p className="text-md mb-2">
-              View and organize book categories for better navigation and
-              discovery.
-            </p>
-            <Link
-              to="/admin/categories"
-              className="inline-block px-6 py-2 text-sm font-semibold text-white bg-yellow-800 rounded-md shadow-md hover:bg-yellow-700 transition-colors"
-            >
-              Categories
-            </Link>
-          </div>
-          <div className="p-8 bg-white text-black rounded-lg h-44 border border-yellow-700">
-            <h2 className="text-2xl font-bold mb-2">Manage Reviews</h2>
-            <p className="text-md mb-2">
-              View and manage reviews to maintain user feedback and quality control.
-            </p>
-            <Link
-              to="/admin/reviews"
-              className="inline-block px-6 py-2 text-sm font-semibold text-white bg-yellow-800 rounded-md shadow-md hover:bg-yellow-700 transition-colors"
-            >
-              Reviews
-            </Link>
-          </div>
-
+              <div className="">
+                <h2 className="text-2xl font-bold mb-2">{block.label}</h2>
+              </div>
+              <p className="text-md mb-2 text-ellipsis overflow-hidden line-clamp-2">
+                {block.description}
+              </p>
+              <Link
+                to={block.route}
+                className="w-fit mx-auto px-6 py-2 text-sm font-semibold text-white bg-blue-800 rounded-md shadow-md hover:bg-blue-950 transition-colors"
+              >
+                {block.routeLabel}
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </>
