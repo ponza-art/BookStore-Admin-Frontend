@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { addBook, getAuthors, getCategories } from '../services/api';
-import toast from 'react-hot-toast';
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from "react";
+import { addBook, getAuthors, getCategories } from "../services/api";
+import toast from "react-hot-toast";
 
 const AddBookForm = ({ onAdd, onClose }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [author, setAuthor] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [author, setAuthor] = useState("");
   const [discountPercentage, setDiscountPercentage] = useState(0); // New state
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
@@ -24,8 +26,8 @@ const AddBookForm = ({ onAdd, onClose }) => {
         setCategories(fetchedCategories);
         setAuthors(fetchedAuthors);
       } catch (error) {
-        toast.error('Failed to load authors and categories');
-        console.error('Error fetching data:', error);
+        toast.error("Failed to load authors and categories");
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
@@ -35,13 +37,16 @@ const AddBookForm = ({ onAdd, onClose }) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
-    if (e.target.name === 'samplePdf' && selectedFile.type !== 'application/pdf') {
-      toast.error('Only PDF files are allowed for sample!');
+    if (
+      e.target.name === "samplePdf" &&
+      selectedFile.type !== "application/pdf"
+    ) {
+      toast.error("Only PDF files are allowed for sample!");
       return;
     }
 
     if (selectedFile.size > 4 * 1024 * 1024) {
-      toast.error('File size must be less than 4MB');
+      toast.error("File size must be less than 4MB");
       return;
     }
 
@@ -50,45 +55,59 @@ const AddBookForm = ({ onAdd, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !description || !price || !category || !author || !sourcePath || !coverImage || !samplePdf) {
-      toast.error('All fields are required!');
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !category ||
+      !author ||
+      !sourcePath ||
+      !coverImage ||
+      !samplePdf
+    ) {
+      toast.error("All fields are required!");
       return;
     }
 
     if (price < 0) {
-      toast.error('Price cannot be less than 0!');
+      toast.error("Price cannot be less than 0!");
       return;
     }
 
-    const discountedPrice = price - (price * (discountPercentage / 100)); // Calculate discounted price
+    const discountedPrice = price - price * (discountPercentage / 100);
 
     setUploading(true);
 
     try {
-      await addBook({ title, description, price, category, author, discountPercentage }, sourcePath, coverImage, samplePdf);
-      setTitle('');
-      setDescription('');
-      setPrice('');
-      setCategory('');
-      setAuthor('');
-      setDiscountPercentage(0); // Reset discount percentage
+      await addBook(
+        { title, description, price, category, author, discountPercentage },
+        sourcePath,
+        coverImage,
+        samplePdf
+      );
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setCategory("");
+      setAuthor("");
+      setDiscountPercentage(0);
       setSourcePath(null);
       setCoverImage(null);
       setSamplePdf(null);
-      toast.success('Book added successfully!');
+      toast.success("Book added successfully!");
       onAdd();
     } catch (error) {
-      toast.error('Failed to add book');
-      console.error('Failed to add book', error);
+      toast.error("Failed to add book");
+      console.error("Failed to add book", error);
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center ">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full ">
-        <h2 className="text-3xl font-bold mb-6 text-center text-[#844f4f] ">Add a New Book</h2>
+    <div className="bg-white rounded-xl p-8 max-w-4xl w-full">
+      <form onSubmit={handleSubmit} className="">
+        <h2 className="text-3xl text-center font-bold mb-5">Add a New Book</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <input
@@ -96,7 +115,7 @@ const AddBookForm = ({ onAdd, onClose }) => {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="input input-bordered border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="input input-bordered w-full focus:border-blue-900 focus:ring"
           />
 
           <input
@@ -104,7 +123,7 @@ const AddBookForm = ({ onAdd, onClose }) => {
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="input input-bordered w-full focus:border-blue-900 focus:ring"
           />
 
           <input
@@ -112,13 +131,13 @@ const AddBookForm = ({ onAdd, onClose }) => {
             placeholder="Discount Percentage"
             value={discountPercentage}
             onChange={(e) => setDiscountPercentage(e.target.value)}
-            className="input input-bordered border-blue-900 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="input input-bordered w-full focus:border-blue-900 focus:ring"
           />
 
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="select select-bordered input text-[#5b2c2c] font-medium border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="select select-bordered w-full focus:border-blue-900 focus:ring"
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
@@ -131,11 +150,17 @@ const AddBookForm = ({ onAdd, onClose }) => {
           <select
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
-            className="select text-[#5b2c2c] font-medium select-bordered input border-blue-950 w-full focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60"
+            className="select select-bordered w-full focus:border-blue-900 focus:ring"
           >
-            <option className='text-[#936767]' value="">Select Author</option>
+            <option className="text-[#936767]" value="">
+              Select Author
+            </option>
             {authors.map((auth) => (
-              <option className='text-[#936767]' key={auth._id} value={auth.name}>
+              <option
+                className="text-[#936767]"
+                key={auth._id}
+                value={auth.name}
+              >
                 {auth.name}
               </option>
             ))}
@@ -145,13 +170,16 @@ const AddBookForm = ({ onAdd, onClose }) => {
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="textarea textarea-bordered w-full input border-blue-950 focus:border-amber-900 focus:ring focus:ring-amber-900 focus:ring-opacity-60 md:col-span-2"
+            //input input-bordered w-full focus:border-blue-900 focus:ring
+            className="textarea textarea-bordered w-full input focus:border-blue-900 focus:ring md:col-span-2 resize-none h-24"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           <div className="mb-4">
-            <label htmlFor="sourcePath" className="block text-[#936767] mb-2">The Full Book</label>
+            <label htmlFor="sourcePath" className="block text-[#936767] mb-2">
+              The Full Book
+            </label>
             <input
               type="file"
               name="sourcePath"
@@ -162,7 +190,9 @@ const AddBookForm = ({ onAdd, onClose }) => {
           </div>
 
           <div className="mb-6">
-            <label htmlFor="samplePdf" className="block text-[#936767] mb-2">Sample</label>
+            <label htmlFor="samplePdf" className="block text-[#936767] mb-2">
+              Sample
+            </label>
             <input
               type="file"
               name="samplePdf"
@@ -173,7 +203,9 @@ const AddBookForm = ({ onAdd, onClose }) => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="coverImage" className="block text-[#936767] mb-2">Cover</label>
+            <label htmlFor="coverImage" className="block text-[#936767] mb-2">
+              Cover
+            </label>
             <input
               type="file"
               name="coverImage"
@@ -184,21 +216,20 @@ const AddBookForm = ({ onAdd, onClose }) => {
           </div>
         </div>
 
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center gap-2 mt-3">
           <button
             type="button"
+            className={`btn bg-slate-200 font-bold py-2 px-2 rounded-lg w-28`}
             onClick={onClose}
-            className="btn border-amber-900 bg-transparent hover:bg-amber-700 text-blue-950 font-bold py-2 px-2 rounded-lg w-20"
           >
             Close
           </button>
-
           <button
             type="submit"
-            className={`btn bg-amber-900 hover:bg-amber-700 w-20 text-white font-bold py-2 px-2 rounded-lg ${uploading && 'cursor-not-allowed'}`}
+            className="btn bg-blue-800 hover:bg-blue-950 w-28 text-white font-bold py-2 px-2 rounded-lg"
             disabled={uploading}
           >
-            {uploading ? 'Uploading...' : 'Add'}
+            {uploading ? "Uploading..." : "Add"}
           </button>
         </div>
       </form>
