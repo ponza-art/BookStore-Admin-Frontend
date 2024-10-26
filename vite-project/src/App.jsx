@@ -10,12 +10,14 @@ import ManageReviews from "./components/ManageReviews";
 import Header from "./components/Header";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./components/NotFound";
 import "./index.css";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -27,7 +29,7 @@ function App() {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const handleLoginSuccess = (user) => {
-    console.log("Logged in user:", user);
+    // console.log("Logged in user:", user);
     setIsAuthenticated(true);
   };
 
@@ -38,14 +40,20 @@ function App() {
   return (
     <Router>
       <div className="flex">
-        {isAuthenticated && (
+        {isAuthenticated && notFound && (
           <Header
             toggleSidebar={toggleSidebar}
             sidebarOpen={sidebarOpen}
             onLogout={() => setIsAuthenticated(false)}
           />
         )}
-        <div className={isAuthenticated ? "flex-grow p-8" : "flex-grow"}>
+        <div
+          className={
+            isAuthenticated
+              ? "flex-grow p-8 overflow-auto bg-[#f7f9fc]"
+              : "flex-grow"
+          }
+        >
           <Routes>
             {!isAuthenticated ? (
               <Route
@@ -57,7 +65,7 @@ function App() {
                 <Route
                   path="/"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute setNotFound={setNotFound}>
                       <AdminPanel />
                     </ProtectedRoute>
                   }
@@ -65,7 +73,7 @@ function App() {
                 <Route
                   path="/books"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute setNotFound={setNotFound}>
                       <ManageBooks />
                     </ProtectedRoute>
                   }
@@ -73,7 +81,7 @@ function App() {
                 <Route
                   path="/users"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute setNotFound={setNotFound}>
                       <ManageUsers />
                     </ProtectedRoute>
                   }
@@ -81,7 +89,7 @@ function App() {
                 <Route
                   path="/authors"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute setNotFound={setNotFound}>
                       <ManageAuthors />
                     </ProtectedRoute>
                   }
@@ -89,7 +97,7 @@ function App() {
                 <Route
                   path="/categories"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute setNotFound={setNotFound}>
                       <ManageCategories />
                     </ProtectedRoute>
                   }
@@ -97,10 +105,14 @@ function App() {
                 <Route
                   path="/reviews"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute setNotFound={setNotFound}>
                       <ManageReviews />
                     </ProtectedRoute>
                   }
+                />
+                <Route
+                  path="*"
+                  element={<NotFound setNotFound={setNotFound} />}
                 />
               </>
             )}
