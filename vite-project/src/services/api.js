@@ -1,7 +1,12 @@
 export const getBooks = async (queryParams = {}) => {
   const query = new URLSearchParams(queryParams).toString();
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/book/?${query}`
+    `https://book-store-backend-sigma-one.vercel.app/book/?${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
   );
   return await response.json();
 };
