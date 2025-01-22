@@ -1,7 +1,7 @@
 export const getBooks = async (queryParams = {}) => {
   const query = new URLSearchParams(queryParams).toString();
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/book/?${query}`,
+    `https://book-store-backend-azure-tau.vercel.app/book/?${query}`,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -25,7 +25,7 @@ export const addBook = async (book, sourcePath, coverImage, samplePdf) => {
 
   try {
     const response = await fetch(
-      "https://book-store-backend-sigma-one.vercel.app/book/",
+      "https://book-store-backend-azure-tau.vercel.app/book/",
       {
         method: "POST",
         headers: {
@@ -61,7 +61,7 @@ export const updateBook = async (
 
   try {
     const response = await fetch(
-      `https://book-store-backend-sigma-one.vercel.app/book/${id}`,
+      `https://book-store-backend-azure-tau.vercel.app/book/${id}`,
       {
         method: "PUT",
         headers: {
@@ -85,7 +85,7 @@ export const updateBook = async (
 export const deleteBook = async (id) => {
   try {
     const response = await fetch(
-      `https://book-store-backend-sigma-one.vercel.app/book/${id}`,
+      `https://book-store-backend-azure-tau.vercel.app/book/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -106,14 +106,14 @@ export const deleteBook = async (id) => {
 
 export const getBook = async (id) => {
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/book/${id}`
+    `https://book-store-backend-azure-tau.vercel.app/book/${id}`
   );
   return await response.json();
 };
 
 export const getUsers = async () => {
   const response = await fetch(
-    "https://book-store-backend-sigma-one.vercel.app/users",
+    "https://book-store-backend-azure-tau.vercel.app/users",
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -125,7 +125,7 @@ export const getUsers = async () => {
 
 export const deleteUser = async (id) => {
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/users/${id}`,
+    `https://book-store-backend-azure-tau.vercel.app/users/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -140,7 +140,7 @@ export const deleteUser = async (id) => {
 
 export const userStatus = async (id, newStatus) => {
   const response = await fetch(
-    "https://book-store-backend-sigma-one.vercel.app/users/edit-status",
+    "https://book-store-backend-azure-tau.vercel.app/users/edit-status",
     {
       method: "PATCH",
       headers: {
@@ -158,7 +158,7 @@ export const userStatus = async (id, newStatus) => {
 
 export const getCategories = async () => {
   const response = await fetch(
-    "https://book-store-backend-sigma-one.vercel.app/category"
+    "https://book-store-backend-azure-tau.vercel.app/category"
   );
   return await response.json();
 };
@@ -166,7 +166,7 @@ export const getCategories = async () => {
 export const addCategory = async (category) => {
   try {
     const response = await fetch(
-      "https://book-store-backend-sigma-one.vercel.app/category/create",
+      "https://book-store-backend-azure-tau.vercel.app/category/create",
       {
         method: "POST",
         headers: {
@@ -191,7 +191,7 @@ export const addCategory = async (category) => {
 export const updateCategory = async (id, updatedCategory) => {
   try {
     const response = await fetch(
-      `https://book-store-backend-sigma-one.vercel.app/category/update/${id}`,
+      `https://book-store-backend-azure-tau.vercel.app/category/update/${id}`,
       {
         method: "PUT",
         headers: {
@@ -215,7 +215,7 @@ export const updateCategory = async (id, updatedCategory) => {
 
 export const deleteCategory = async (id) => {
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/category/delete/${id}`,
+    `https://book-store-backend-azure-tau.vercel.app/category/delete/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -230,7 +230,7 @@ export const deleteCategory = async (id) => {
 
 export const getOrders = async () => {
   const response = await fetch(
-    "https://book-store-backend-sigma-one.vercel.app/order",
+    "https://book-store-backend-azure-tau.vercel.app/order",
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -242,7 +242,7 @@ export const getOrders = async () => {
 
 export const createOrder = async (order) => {
   const response = await fetch(
-    "https://book-store-backend-sigma-one.vercel.app/order",
+    "https://book-store-backend-azure-tau.vercel.app/order",
     {
       method: "POST",
       headers: {
@@ -257,7 +257,7 @@ export const createOrder = async (order) => {
 
 export const deleteOrder = async (id) => {
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/order/${id}`,
+    `https://book-store-backend-azure-tau.vercel.app/order/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -273,7 +273,7 @@ export const deleteOrder = async (id) => {
 export const getAuthors = async () => {
   try {
     const response = await fetch(
-      "https://book-store-backend-sigma-one.vercel.app/author",
+      "https://book-store-backend-azure-tau.vercel.app/author",
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -295,7 +295,7 @@ export const getAuthors = async () => {
 export const getorders = async () => {
   try {
     const response = await fetch(
-      "https://book-store-backend-sigma-one.vercel.app/orders/all",
+      "https://book-store-backend-azure-tau.vercel.app/orders/all",
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -317,7 +317,7 @@ export const getorders = async () => {
 export const addAuthor = async (author) => {
   try {
     const response = await fetch(
-      "https://book-store-backend-sigma-one.vercel.app/author/create",
+      "https://book-store-backend-azure-tau.vercel.app/author/create",
       {
         method: "POST",
         headers: {
@@ -341,7 +341,7 @@ export const addAuthor = async (author) => {
 export const updateAuthor = async (id, updatedAuthor) => {
   try {
     const response = await fetch(
-      `https://book-store-backend-sigma-one.vercel.app/author/update/${id}`,
+      `https://book-store-backend-azure-tau.vercel.app/author/update/${id}`,
       {
         method: "PUT",
         headers: {
@@ -365,7 +365,7 @@ export const updateAuthor = async (id, updatedAuthor) => {
 export const deleteAuthor = async (id) => {
   try {
     const response = await fetch(
-      `https://book-store-backend-sigma-one.vercel.app/author/delete/${id}`,
+      `https://book-store-backend-azure-tau.vercel.app/author/delete/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -389,7 +389,7 @@ export const getAllReviews = async () => {
   const token = localStorage.getItem("token");
 
   const response = await fetch(
-    "https://book-store-backend-sigma-one.vercel.app/review/all-reviews",
+    "https://book-store-backend-azure-tau.vercel.app/review/all-reviews",
     {
       method: "GET",
       headers: {
@@ -410,7 +410,7 @@ export const deleteReview = async (reviewId) => {
   const token = localStorage.getItem("token");
 
   const response = await fetch(
-    `https://book-store-backend-sigma-one.vercel.app/review/admin/${reviewId}`,
+    `https://book-store-backend-azure-tau.vercel.app/review/admin/${reviewId}`,
     {
       method: "DELETE",
       headers: {
@@ -432,7 +432,7 @@ export const getStats = async () => {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await fetch("https://book-store-backend-sigma-one.vercel.app/admin/stats", {
+    const response = await fetch("https://book-store-backend-azure-tau.vercel.app/admin/stats", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

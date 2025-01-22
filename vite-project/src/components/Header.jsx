@@ -30,7 +30,7 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "https://book-store-backend-sigma-one.vercel.app/contact",
+          "https://book-store-backend-azure-tau.vercel.app/contact",
           {
             method: "GET",
             headers: {
@@ -50,7 +50,7 @@ const Header = ({ toggleSidebar, sidebarOpen, onLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://book-store-backend-sigma-one.vercel.app/contact/${messageId}`,
+        `https://book-store-backend-azure-tau.vercel.app/contact/${messageId}`,
         {
           method: "DELETE",
           headers: {
